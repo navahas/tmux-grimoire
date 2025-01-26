@@ -3,7 +3,7 @@
 # Get the current session name (parent session, even in a popup)
 current_session=$(tmux display-message -p '#{client_session}')
 current_client=$(tmux display-message -p '#{client_name}')
-session_name="_buoyshell-manager"
+session_name=$(tmux show-environment -g BUOYSHELL_MANAGER)
 temp_window="_tty"
 
 # Check if session_name exists and create if doesn't
