@@ -32,5 +32,5 @@ tmux display-popup \
   -d '#{pane_current_path}' \
   -xC -yC \
   -w80% -h80% \
-  -T " session: #{session_name} " \
+  -T " session: #{current_session} " \
   "tmux attach-session -t '$session_name' \; select-window -t '$current_session'"
