@@ -2,6 +2,8 @@
 
 A Tmux plugin providing persistent floating shells per session with automatic management.
 
+![Description](images/showcase.png)
+
 ## Overview
 
 BuoyShell creates a dedicated manager session that handles independent floating shells for each Tmux session. Key features:
