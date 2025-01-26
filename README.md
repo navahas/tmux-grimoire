@@ -50,6 +50,22 @@ The plugin will:
 
 When you exit the popup, your shell state persists in the manager session.
 
+## Configuration
+
+You can customize the plugin behavior by setting these options in your `~/.tmux.conf`:
+
+```tmux
+# Change the toggle keybinding (default: f)
+set -g @buoyshell-key "f"
+
+# Set popup dimensions (default: 80%)
+set -g @buoyshell-width "80%"
+set -g @buoyshell-height "80%"
+
+# Change the manager session name (default: _buoyshell-manager)
+set -g @buoyshell-session "_buoyshell-manager"
+```
+
 ## Implementation Details
 
 - Manager session name: `_buoyshell-manager`
