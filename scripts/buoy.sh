@@ -4,9 +4,13 @@
 current_session=$(tmux display-message -p '#{client_session}')
 current_client=$(tmux display-message -p '#{client_name}')
 session_name=$(tmux show-option -gv '@buoyshell-session')
+width=$(tmux show-option -gv '@buoyshell-width')
+height=$(tmux show-option -gv '@buoyshell-height')
 temp_window="_tty"
 
 : "${session_name:=_buoyshell-manager}"
+: "${width:=80%}"
+: "${height:=80%}"
 
 # Check if session_name exists and create if doesn't
 tmux has-session -t "$session_name" 2>/dev/null
@@ -31,6 +35,6 @@ tmux display-popup \
   -E \
   -d '#{pane_current_path}' \
   -xC -yC \
-  -w80% -h80% \
-  -T " session: #{current_session} " \
+  -w"$width" -h"$height" \
+  -T " session: $current_session " \
   "tmux attach-session -t '$session_name' \; select-window -t '$current_session'"
