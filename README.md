@@ -13,7 +13,7 @@ A tmux plugin that provides a floating shell manager with session persistence.
 ### Using TPM (recommended)
 Add this line to your ~/.tmux.conf:
 ```tmux
-set -g @plugin 'username/buoyshell'
+set -g @plugin 'cnavajas/buoyshell'
 ```
 Press prefix + I to install.
 

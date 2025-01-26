@@ -12,7 +12,7 @@ DEFAULT_CONFIG=(
     "MANAGER_SESSION=_buoyshell-manager"
     "POPUP_WIDTH=80%"
     "POPUP_HEIGHT=80%"
-    "POPUP_TITLE= Session: #{session_name} "
+    "POPUP_TITLE= session: #{session_name} "
     "CLEANUP_ORPHANS=true"
 )
 
