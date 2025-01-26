@@ -1,45 +1,64 @@
-# Buoyshell - Tmux Floating Shell Manager
+# BuoyShell
 
-A tmux plugin that provides a floating shell manager with session persistence.
+A Tmux plugin providing persistent floating shells per session with automatic management.
 
-## Features
-- Floating popup shell with session persistence
-- Automatic cleanup of orphaned sessions
-- Configurable appearance and behavior
-- Smart session management
+## Overview
+
+BuoyShell creates a dedicated manager session that handles independent floating shells for each Tmux session. Key features:
+
+- Independent floating shell per Tmux session with persistence
+- Hidden status bar by default
+- Clean session management with automatic window creation/cleanup
+- Simple popup toggling with a single keybinding
 
 ## Installation
 
-### Using TPM (recommended)
-Add this line to your ~/.tmux.conf:
+### With Tmux Plugin Manager (TPM)
+
+Add to `~/.tmux.conf`:
 ```tmux
 set -g @plugin 'cnavajas/buoyshell'
 ```
-Press prefix + I to install.
+
+Install with `prefix + I`
 
 ### Manual Installation
+
 ```bash
-git clone https://github.com/username/buoyshell.git ~/.tmux/plugins/buoyshell
+git clone https://github.com/cnavajas/buoyshell.git ~/.tmux/plugins/buoyshell
 ```
-Add this line to ~/.tmux.conf:
+
+Add to `~/.tmux.conf`:
 ```tmux
 run-shell ~/.tmux/plugins/buoyshell/buoyshell.tmux
 ```
 
-## Configuration
-Create `~/.config/tmux/buoyshell/config` to customize settings:
-```bash
-MANAGER_SESSION=_manager      # Name of the manager session
-POPUP_WIDTH=80%              # Width of popup
-POPUP_HEIGHT=80%             # Height of popup
-POPUP_TITLE=" Shell "        # Popup title
-CLEANUP_ORPHANS=true         # Automatically cleanup orphaned windows
-```
-
 ## Usage
+
 Press `prefix + f` to toggle the floating shell.
-- If you're in the manager session, it will detach
-- If you're in a regular session, it will open the floating shell
+
+The plugin will:
+1. Create a hidden manager session if it doesn't exist
+2. Create a dedicated window for your current session if needed
+3. Show the shell in a centered popup
+
+When you exit the popup, your shell state persists in the manager session.
+
+## Implementation Details
+
+- Manager session name: `_buoyshell-manager`
+- No status bar displayed
+- Popup dimensions: 80% width, 80% height
+- Windows named after their parent sessions
+- Windows inherit parent session's working directory
+
+## Upcoming Features
+
+- Customizable popup dimensions
+- Configurable keybindings
+- Status bar toggle option
+- Session cleanup options
 
 ## License
+
 MIT
