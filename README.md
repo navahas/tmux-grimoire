@@ -17,7 +17,7 @@ BuoyShell creates a dedicated manager session that handles independent floating 
 
 Add to `~/.tmux.conf`:
 ```tmux
-set -g @plugin 'cnavajas/buoyshell'
+set -g @plugin 'cnavajas/tmux-buoyshell'
 ```
 
 Install with `prefix + I`
@@ -25,7 +25,7 @@ Install with `prefix + I`
 ### Manual Installation
 
 ```bash
-git clone https://github.com/cnavajas/buoyshell.git ~/.tmux/plugins/buoyshell
+git clone https://github.com/cnavajas/tmux-buoyshell.git ~/.tmux/plugins/tmux-buoyshell
 ```
 
 Add to `~/.tmux.conf`:
