@@ -7,6 +7,6 @@ tmux setenv -g BUOYSHELL_WIDTH "$(tmux show-option -gv "@buoyshell-width" || ech
 tmux setenv -g BUOYSHELL_HEIGHT "$(tmux show-option -gv "@buoyshell-height" || echo "80%")"
 tmux setenv -g BUOYSHELL_TITLE "$(tmux show-option -gv "@buoyshell-title" || echo " session: #{session_name} ")"
 
-tmux bind-key f if-shell -F "#{==:#{client_session},_buoyshell-manager}" \
+tmux bind-key "$BUOYSHELL_KEY" if-shell -F "#{==:#{client_session},$BUOYSHELL_MANAGER}" \
     "detach-client" \
     "run-shell '$CURRENT_DIR/scripts/buoy.sh'"
