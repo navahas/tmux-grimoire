@@ -6,11 +6,15 @@ A Tmux plugin providing persistent floating shells per session with automatic ma
 
 ## Overview
 
-BuoyShell creates a dedicated manager session that handles independent floating shells for each Tmux session. Key features:
+BuoyShell is a minimal Tmux plugin that creates a dedicated manager session for handling independent floating shells. It's designed to be lightweight and simple.
+
+For a more feature-rich floating window implementation, check out [tmux-floax](https://github.com/omerxx/tmux-floax).
+
+Key features of BuoyShell:
 
 - Independent floating shell per Tmux session with persistence
 - Hidden status bar by default
-- Clean session management with automatic window creation/cleanup
+- Clean session management with automatic window creation
 - Simple popup toggling with a single keybinding
 
 ## Installation
