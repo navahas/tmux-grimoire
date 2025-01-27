@@ -23,6 +23,9 @@ if [[ $? -ne 0 ]]; then
     tmux set-option -t "$session_name" status off
 fi
 
+# Move the window back to the original session when the popup is detached
+tmux set-hook -t "$session_name" client-detached "run-shell 'tmux swap-window -s \"$session_name:$window_name\" -t \"$current_session:1\"'"
+
 window_name="buoyshell_$current_session"
 session_dir=$(tmux display-message -t "$current_session" -p '#{pane_current_path}')
 
@@ -53,8 +56,4 @@ tmux display-popup \
   -x"$_x" -y"$_y" \
   -w"$width" -h"$height" \
   -T " session: $current_session " \
-  "tmux attach-session -t '$session_name' \; select-window -t '$current_session'"
-
-
-# Move the window back to the original session when the popup is detached
-tmux set-hook -g -t "$session_name" client-detached "run-shell 'tmux swap-window -s \"$session_name:$window_name\" -t \"$current_session:1\"'"
+  "tmux attach-session -t '$session_name' \; select-window -t '$window_name'"
