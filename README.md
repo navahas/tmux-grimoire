@@ -1,14 +1,16 @@
 # BuoyShell
 
-A Tmux plugin providing persistent floating shells per session with automatic management.
+A Tmux plugin providing persistent floating shells per session with an easy management.
 
 ![Description](images/showcase.png)
 
 ## Overview
 
-BuoyShell is a minimal Tmux plugin that creates a dedicated manager session for handling independent floating shells. It's designed to be lightweight and simple.
+BuoyShell is a minimal Tmux plugin that creates a dedicated manager session for handling independent "buoyant" shells, designed to be lightweight and simple.
 
-For a more feature-rich floating window implementation, check out [tmux-floax](https://github.com/omerxx/tmux-floax).
+The plugin uses window position 1 in each tmux session as a persistent floating pane. This is where the name "BuoyShell" comes from - the shell pops up and down like a buoy, but maintains its state persistently.
+
+If you’re looking for a more feature-rich floating window implementation, consider [tmux-floax](https://github.com/omerxx/tmux-floax).
 
 Key features of BuoyShell:
 
@@ -43,15 +45,6 @@ run-shell ~/.tmux/plugins/buoyshell/buoyshell.tmux
 
 Press `prefix + f` to toggle the floating shell.
 
-The plugin will:
-1. Create a hidden manager session if it doesn't exist
-2. Create a dedicated window for your current session if needed
-3. Show the shell in a centered popup
-
-When you exit the popup, your shell state persists in the manager session.
-
-## Configuration
-
 You can customize the plugin behavior by setting these options in your `~/.tmux.conf`:
 
 ```tmux
@@ -61,6 +54,24 @@ set -g @buoyshell-key "f"
 # Set popup dimensions (default: 80%)
 set -g @buoyshell-width "80%"
 set -g @buoyshell-height "80%"
+
+# Set popup position
+# DEFAULT -- CENTERED
+set-option -g @buoyshell-x 'C'
+set-option -g @buoyshell-y 'C'
+
+# -- BOTTOM RIGHT CORNER
+set-option -g @buoyshell-x 'R'
+set-option -g @buoyshell-y 'S'
+# -- TOP RIGHT CORNER
+set-option -g @buoyshell-x 'R'
+set-option -g @buoyshell-y 'M'
+# -- TOP LEFT CORNER
+set-option -g @buoyshell-x 'M'
+set-option -g @buoyshell-y 'M'
+# -- BOTTOM LEFT CORNER
+set-option -g @buoyshell-x 'P'
+set-option -g @buoyshell-y 'P'
 
 # Change the manager session name (default: _buoyshell-manager)
 set -g @buoyshell-session "_buoyshell-manager"
