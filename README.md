@@ -2,7 +2,7 @@
 
 A tmux plugin that provides a per-session popup shell for a smoother workflow.
 
-![Description](images/showcase.png)
+![Preview](https://raw.githubusercontent.com/navahas/tmux-buoyshell/assets/images/main.png)
 
 ## Overview
 
