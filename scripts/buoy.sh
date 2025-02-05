@@ -1,59 +1,59 @@
 #!/usr/bin/env bash
 
-# Get the current session name (parent session, even in a popup)
 current_session=$(tmux display-message -p '#{client_session}')
 current_client=$(tmux display-message -p '#{client_name}')
-session_name=$(tmux show-option -gv '@buoyshell-session')
+original_mouse_setting=$(tmux show-option -gv mouse)
+buoyshell_session=$(tmux show-option -gv '@buoyshell-session')
 width=$(tmux show-option -gv '@buoyshell-width')
 height=$(tmux show-option -gv '@buoyshell-height')
-_x=$(tmux show-option -gv '@buoyshell-x')
-_y=$(tmux show-option -gv '@buoyshell-y')
-temp_window="_tty"
+buoyshell_x=$(tmux show-option -gv '@buoyshell-x')
+buoyshell_y=$(tmux show-option -gv '@buoyshell-y')
+buoyshell_window_title=$(tmux show-option -gv '@buoyshell-title')
+buoyshell_window_color=$(tmux show-option -gv '@buoyshell-color')
+buoyshell_window_name="buoyshell"
 
-: "${session_name:=_buoyshell-manager}"
+: "${buoyshell_session:=_buoyshell-manager}"
 : "${width:=80%}"
 : "${height:=80%}"
-: "${_x:=R}"
-: "${_y:=S}"
+: "${buoyshell_x:=C}"
+: "${buoyshell_y:=C}"
+: "${buoyshell_window_title:=}"
+: "${buoyshell_window_color:=}"
 
-# Check if session_name exists and create if doesn't
-tmux has-session -t "$session_name" 2>/dev/null
-if [[ $? -ne 0 ]]; then
-    TMUX='' tmux new-session -d -s "$session_name" -n "$temp_window"
-    tmux set-option -t "$session_name" status off
+if ! tmux has-session -t "$buoyshell_session" 2>/dev/null; then
+    TMUX='' tmux new-session -d -s "$buoyshell_session" -n "$buoyshell_window_name"
+    tmux set-option -t "$buoyshell_session" status off
 fi
 
-# Move the window back to the original session when the popup is detached
-tmux set-hook -t "$session_name" client-detached "run-shell 'tmux swap-window -s \"$session_name:$window_name\" -t \"$current_session:1\"'"
+tmux set-hook -t "$buoyshell_session" client-detached \
+    "run-shell 'tmux swap-window -s \"$buoyshell_session:$buoyshell_window_name\" -t \"$current_session:$buoyshell_window_name\"; tmux kill-session -t \"$buoyshell_session\"'"
 
-window_name="buoyshell_$current_session"
+# Get the current session's working directory
 session_dir=$(tmux display-message -t "$current_session" -p '#{pane_current_path}')
 
-# Check if the current session has a window in position :1
-if tmux list-windows -t "$current_session" -F '#{window_index}' | grep -q '^1$'; then
-    # Rename the window in position :1 to buoy_<session_name>
-    tmux rename-window -t "$current_session:1" "$window_name"
-else
-    # Create a new window in position :1 for the current session
-    tmux new-window -d -t "$current_session:1" -n "$window_name" -c "$session_dir"
+# Ensure a window named "buoyshell" exists in the current session
+if ! tmux list-windows -t "$current_session" -F "#{window_name}" | grep -qx "$buoyshell_window_name"; then
+    tmux new-window -d -t "$current_session" -n "$buoyshell_window_name" -c "$session_dir"
 fi
 
-# Check if shell for the current session already exists in the popup session
-if ! tmux list-windows -t "$session_name" -F '#{window_name}' | grep -q "^$window_name$"; then
-    tmux new-window -d -t "$session_name" -n "$window_name" -c "$session_dir"
+# Move the "buoyshell" window from the current session to the manager session
+if tmux list-windows -t "$current_session" -F "#{window_name}" | grep -qx "$buoyshell_window_name"; then
+    tmux swap-window -s "$current_session:$buoyshell_window_name" -t "$buoyshell_session:$buoyshell_window_name"
 fi
 
-# Ensure temp_window is cleaned
-tmux kill-window -t "$session_name:$temp_window" 2>/dev/null
+# Debuging panes
+# tmux display-message "X: $buoyshell_x, Y: $buoyshell_y, Width: $width, Height: $height"
 
-# Move the window from the current session to the manager session
-tmux swap-window -s "$current_session:1" -t "$session_name:$window_name"
-
-# Launch Popup
+tmux set-option -g mouse off
 tmux display-popup \
-  -E \
-  -d '#{pane_current_path}' \
-  -x"$_x" -y"$_y" \
-  -w"$width" -h"$height" \
-  -T " session: $current_session " \
-  "tmux attach-session -t '$session_name' \; select-window -t '$window_name'"
+    -E \
+    -d '#{pane_current_path}' \
+    -x "$buoyshell_x" \
+    -y "$buoyshell_y" \
+    -w "$width" -h "$height" \
+    -b "rounded" \
+    -S "fg=$buoyshell_window_color" \
+    -T "$buoyshell_window_title" \
+    "tmux attach-session -t '$buoyshell_session' \; select-window -t '$buoyshell_window_name'"
+
+tmux set-option -g mouse "$original_mouse_setting"
