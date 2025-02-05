@@ -148,6 +148,9 @@ This allows you to move not only BuoyShell, but any window position in your tmux
 
 BuoyShell will display the window **including splits**. If you frequently use splits in the secondary window (which you want to act as BuoyShell), a resize with positioning is a good approach.
 
+![Bottom Full Width](https://raw.githubusercontent.com/navahas/tmux-buoyshell/assets/images/bottom-full.png)
+![Left Full Height](https://raw.githubusercontent.com/navahas/tmux-buoyshell/assets/images/left-full.png)
+
 ## License
 
 MIT
