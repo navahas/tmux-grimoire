@@ -4,6 +4,9 @@ A tmux plugin that provides a per-session popup shell for a smoother workflow.
 
 ![Preview](https://raw.githubusercontent.com/navahas/tmux-buoyshell/assets/images/main.png)
 
+## Showcase
+https://github.com/user-attachments/assets/2d0f8ea0-d575-49f6-aa72-aaf2a77ebb07
+
 ## Overview
 
 BuoyShell is a minimal tmux plugin that provides "buoyant" capability to a shell window in any tmux session, enabling quick access without leaving the current workflow.
@@ -52,6 +55,8 @@ You can customize the plugin behavior by setting these options in your `~/.tmux.
 # ——————————————————————————————————————————————
 # Change the toggle keybinding (default: f)
 set -g @buoyshell-key "f"
+# Change the ephemeral buoyshell keybinding (default: F)
+set -g @ephemeral-buoy-key "F"
 
 # Set buoyshell title
 set-option -g @buoyshell-title ''
