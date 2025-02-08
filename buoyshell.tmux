@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 buoy_key=$(tmux show-option -gv '@buoyshell-key')
-ephemeral_buoy_key=$(tmux show-option -gv '@ephemeral-buoy-key')
+ephemeral_buoy_key=$(tmux show-option -gv '@ephemeral-buoyshell-key')
 buoy_session="_buoy-session"
 ephemeral_buoy_session="_ephemeral-buoy-session"
 
