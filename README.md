@@ -56,7 +56,7 @@ You can customize the plugin behavior by setting these options in your `~/.tmux.
 # Change the toggle keybinding (default: f)
 set -g @buoyshell-key "f"
 # Change the ephemeral buoyshell keybinding (default: F)
-set -g @ephemeral-buoy-key "F"
+set -g @ephemeral-buoyshell-key "F"
 
 # Set buoyshell title
 set-option -g @buoyshell-title ''
