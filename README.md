@@ -59,7 +59,7 @@ set -g @buoyshell-key "f"
 set -g @ephemeral-buoyshell-key "F"
 # Change the global toggle keybinding (disabled by default)
 set -g @buoyshell-global-key "C-M-f"
-# Change the global ephemeral keybinding
+# Change the global ephemeral keybinding (disabled by default)
 set -g @ephemeral-buoyshell-global-key "C-M-F"
 
 # Set buoyshell title
