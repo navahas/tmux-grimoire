@@ -11,5 +11,9 @@ tmux bind-key "$buoy_key" run-shell ". ~/.tmux/plugins/tmux-buoyshell/scripts/bu
 tmux bind-key "$ephemeral_buoy_key" run-shell ". ~/.tmux/plugins/tmux-buoyshell/scripts/buoy_invoke.sh ephemeral"
 
 # global key config
-[[ -n $buoy_global_key ]] && tmux bind-key -n "$buoy_global_key" run-shell ". ~/.tmux/plugins/tmux-buoyshell/scripts/buoy_invoke.sh standard"
-[[ -n $ephemeral_buoy_global_key ]] && tmux bind-key -n "$ephemeral_buoy_global_key" run-shell ". ~/.tmux/plugins/tmux-buoyshell/scripts/buoy_invoke.sh ephemeral"
+if [[ -n $buoy_global_key ]]; then
+  tmux bind-key -n "$buoy_global_key" run-shell ". ~/.tmux/plugins/tmux-buoyshell/scripts/buoy_invoke.sh standard"
+fi
+if [[ -n $ephemeral_buoy_global_key ]]; then
+  tmux bind-key -n "$ephemeral_buoy_global_key" run-shell ". ~/.tmux/plugins/tmux-buoyshell/scripts/buoy_invoke.sh ephemeral"
+fi
