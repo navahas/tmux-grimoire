@@ -1,14 +1,10 @@
 #!/usr/bin/env bash
-mode=$1
+mode=$1 # standard or ephemeral
 
-CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 buoy_key=$(tmux show-option -gv '@buoyshell-key')
 ephemeral_buoy_key=$(tmux show-option -gv '@ephemeral-buoyshell-key')
 buoy_session="_buoy-session"
 ephemeral_buoy_session="_ephemeral-buoy-session"
-
-: "${buoy_key:=f}"
-: "${ephemeral_buoy_key:=F}"
 
 # Universal detach or invoke for Persistent Buoy
 if [[ "standard" == "${mode}" ]]; then
