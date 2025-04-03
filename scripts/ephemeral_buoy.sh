@@ -9,10 +9,12 @@ buoyshell_x=$(tmux show-option -gv '@buoyshell-x')
 buoyshell_y=$(tmux show-option -gv '@buoyshell-y')
 buoyshell_window_title=$(tmux show-option -gv '@buoyshell-title')
 buoyshell_window_color=$(tmux show-option -gv '@buoyshell-color')
-buoyshell_pipe_command=$(tmux show-option -gv '@buoyshell-command')
 buoyshell_session="_ephemeral-buoy-session"
-wait_channel="buoyshell_wait_channel"
 temp_window="_tty"
+
+custom_buoy=$1
+custom_command=$2
+buoyshell_custom_command="${custom_command:-}"
 
 : "${width:=80%}"
 : "${height:=80%}"
@@ -20,7 +22,9 @@ temp_window="_tty"
 : "${buoyshell_y:=C}"
 : "${buoyshell_window_title:=}"
 : "${buoyshell_window_color:=}"
-: "${buoyshell_pipe_command:=}"
+
+popup_title="${buoyshell_window_title}"
+[[ -n $custom_buoy ]] && popup_title="${popup_title:+$popup_title|} $custom_buoy "
 
 if ! tmux has-session -t "$buoyshell_session" 2>/dev/null; then
     TMUX='' tmux new-session -d -s "$buoyshell_session" -n "$temp_window"
@@ -37,8 +41,8 @@ session_dir=$(tmux display-message -t "$current_session" -p '#{pane_current_path
 if ! tmux list-windows -t "$buoyshell_session" -F "#{window_name}" | grep -qx "$current_session"; then
     tmux new-window -d -t "$buoyshell_session" -n "$current_session" -c "$session_dir"
 
-    if [[ -n $buoyshell_pipe_command ]]; then
-        tmux send-keys -t "$buoyshell_session:$current_session" "clear; bash -c \"${buoyshell_pipe_command//\"/\\\"}\"; tmux wait-for -S \"$wait_channel\"" Enter
+    if [[ -n $buoyshell_custom_command ]]; then
+        tmux send-keys -t "$buoyshell_session:$current_session" "tput clear; bash -c \"${buoyshell_custom_command//\"/\\\"}\"" Enter
     fi
 fi
 
@@ -54,7 +58,7 @@ tmux display-popup \
     -w "$width" -h "$height" \
     -b "rounded" \
     -S "fg=$buoyshell_window_color" \
-    -T "$buoyshell_window_title" \
+    -T "$popup_title" \
     "tmux attach-session -t '$buoyshell_session' \; select-window -t '$current_session'"
 
 tmux set-option -g mouse "$original_mouse_setting"
