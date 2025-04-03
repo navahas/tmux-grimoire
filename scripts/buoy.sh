@@ -15,6 +15,7 @@ custom_buoy=$1
 custom_command=$2
 buoyshell_window_name="${custom_buoy:-buoyshell}"
 buoyshell_custom_command="${custom_command:-}"
+replay_flag=$3
 
 : "${width:=80%}"
 : "${height:=80%}"
@@ -49,6 +50,10 @@ fi
 # Move the "buoyshell" window from the current session to the manager session
 if tmux list-windows -t "$current_session" -F "#{window_name}" | grep -qx "$buoyshell_window_name"; then
     tmux swap-window -s "$current_session:$buoyshell_window_name" -t "$buoyshell_session:$buoyshell_window_name"
+
+    if [[ $replay_flag == "--replay" && -n $buoyshell_custom_command ]]; then
+        tmux send-keys -t "$buoyshell_session:$buoyshell_window_name" "clear; bash -c \"${buoyshell_custom_command//\"/\\\"}\"" Enter
+    fi
 fi
 
 # Debuging panes
