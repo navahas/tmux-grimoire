@@ -50,14 +50,16 @@ run-shell ~/.tmux/plugins/tmux-buoyshell/buoyshell.tmux
 
 ## Usage
 
-Press `prefix + f` to toggle the buoyant shell.
+Press `prefix + f` to toggle the **main BuoyShell** popup (enabled by default).
+
+You can toggle **any buoy on or off** — either the default one (`prefix + f`) or any custom one you've created. Pressing the same key again will close the popup.
 
 ### Quick Configuration
 
 ```tmux
 set -g @plugin 'navahas/tmux-buoyshell'
 set-option -g @buoyshell-title ' buoyshell '
-set-option -g @buoyshell-color '#dcdcaa'
+set-option -g @buoyshell-color '' # or add some color like #dcdcaa
 set-option -g @buoyshell-height '80%'
 set-option -g @buoyshell-width '60%'
 set-option -g @buoyshell-x 'W'
@@ -65,8 +67,8 @@ set-option -g @buoyshell-y 'S'
 
 # Custom Buoy Setup
 bind-key -T prefix Q run-shell "custom_buoy standard personal-buoy"
-bind-key -T prefix b run-shell "custom_buoy standard rust-build 'cargo build'"
-bind-key -T prefix W run-shell "custom_buoy ephemeral test '$HOME/.local/scripts/test.sh'"
+bind-key -T prefix b run-shell "custom_buoy standard directories 'ls -la'"
+bind-key -T prefix W run-shell "custom_buoy ephemeral system-monitor 'htop'"
 ```
 
 You can customize the plugin behavior by setting these options in your `~/.tmux.conf`:
@@ -168,7 +170,7 @@ bind-key -T prefix <key> run-shell "custom_buoy <standard|ephemeral> <buoy-name>
 Examples:
 
 ```tmux
-bind-key -T prefix E run-shell "custom_buoy standard rust-build"
+bind-key -T prefix E run-shell "custom_buoy standard personal-buoy"
 bind-key -T prefix E run-shell "custom_buoy standard rust-build 'cargo build'"
 bind-key -T prefix R run-shell "custom_buoy ephemeral unit_tests '~/scripts/test_suite.sh'"
 bind-key -T prefix Q run-shell "custom_buoy ephemeral test-logs 'tail -f /var/log/syslog'"
@@ -192,7 +194,7 @@ These keys are generally unbound in tmux and offer a smooth developer workflow.
 ### Implementation Details
 
 - Windows inherit parent session's working directory and state.
-- If you want a specific window to become the main BuoyShell, rename it with tmux's default binding `prefix + ,` to buoyshell.
+- Use `prefix + ,` to rename any window to `buoyshell` if you wish to make it the main BuoyShell.
 
 ### Changing the Window Position
 
