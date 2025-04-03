@@ -4,6 +4,9 @@ buoy_global_key=$(tmux show-option -gv '@buoyshell-global-key')
 ephemeral_buoy_key=$(tmux show-option -gv '@ephemeral-buoyshell-key')
 ephemeral_buoy_global_key=$(tmux show-option -gv '@ephemeral-buoyshell-global-key')
 
+PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+tmux set-environment -g PATH "$PLUGIN_DIR/bin:$(tmux show-environment -g PATH | cut -d= -f2-)"
+
 : "${buoy_key:=f}"
 : "${ephemeral_buoy_key:=F}"
 
