@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Resolve plugin root dynamically
+PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+exec "$PLUGIN_DIR/scripts/buoy_invoke.sh" "$@"
