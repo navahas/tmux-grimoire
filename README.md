@@ -1,6 +1,10 @@
+![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)
+![tmux 3.2+](https://img.shields.io/badge/tmux-3.2+-brightgreen)
+![Customizable](https://img.shields.io/badge/feature-Custom_Buoys-orange)
+
 # BuoyShell
 
-A tmux plugin that provides a per-session popup shell for a smoother workflow.
+A tmux plugin for lightweight, fast, **popup shells with custom scripts** — perfect for any terminal-driven environment workflows.
 
 ![Preview](https://raw.githubusercontent.com/navahas/tmux-buoyshell/assets/images/main.png)
 
@@ -9,17 +13,17 @@ https://github.com/user-attachments/assets/2d0f8ea0-d575-49f6-aa72-aaf2a77ebb07
 
 ## Overview
 
-BuoyShell is a minimal tmux plugin that provides "buoyant" capability to a shell window in any tmux session, enabling quick access without leaving the current workflow.
+BuoyShell is a minimal tmux plugin that provides "buoyant" capability to shell windows in any tmux session, enabling quick access without leaving the current workflow.
 
-The plugin allows toggling a designated shell window within each session, making it particularly useful for terminal-based editors like Vim and Neovim, where a quick-access shell is needed without cluttering the workspace.
+The plugin allows toggling designated shell windows within each session, making it particularly useful for terminal-based editors like Vim/Neovim, Emacs, Helix, Kakoune... where a quick-access shell is needed without cluttering the workspace.
 
-If you are looking for a more feature-rich floating window implementation, consider [tmux-floax](https://github.com/omerxx/tmux-floax).
+### Features
 
-### Key features of BuoyShell:
+- Toggle popup shell windows per tmux session using custom keybindings  
+- Customize the position, size, color, and title of your BuoyShell popup  
+- Create custom BuoyShell popups with your own commands or scripts
 
-- Popup shell window per tmux session.
-- Simple popup toggling with a single keybinding
-- Supports moving the BuoyShell window to a custom position.
+---
 
 ## Installation
 
@@ -42,10 +46,28 @@ Add to `~/.tmux.conf`:
 ```tmux
 run-shell ~/.tmux/plugins/tmux-buoyshell/buoyshell.tmux
 ```
+---
 
 ## Usage
 
 Press `prefix + f` to toggle the buoyant shell.
+
+### Quick Configuration
+
+```tmux
+set -g @plugin 'navahas/tmux-buoyshell'
+set-option -g @buoyshell-title ' buoyshell '
+set-option -g @buoyshell-color '#dcdcaa'
+set-option -g @buoyshell-height '80%'
+set-option -g @buoyshell-width '60%'
+set-option -g @buoyshell-x 'W'
+set-option -g @buoyshell-y 'S'
+
+# Custom Buoy Setup
+bind-key -T prefix Q run-shell "custom_buoy standard personal-buoy"
+bind-key -T prefix b run-shell "custom_buoy standard rust-build 'cargo build'"
+bind-key -T prefix W run-shell "custom_buoy ephemeral test '$HOME/.local/scripts/test.sh'"
+```
 
 You can customize the plugin behavior by setting these options in your `~/.tmux.conf`:
 
@@ -57,17 +79,13 @@ You can customize the plugin behavior by setting these options in your `~/.tmux.
 set -g @buoyshell-key "f"
 # Change the ephemeral buoyshell keybinding (default: F)
 set -g @ephemeral-buoyshell-key "F"
-# Change the global toggle keybinding (disabled by default)
-set -g @buoyshell-global-key "C-M-f"
-# Change the global ephemeral keybinding (disabled by default)
-set -g @ephemeral-buoyshell-global-key "C-M-n"
 
 # Set buoyshell title
 set-option -g @buoyshell-title ''
 
 # Set buoyshell border color (default is empty: fallbacks to your config)
 # — value: #hexcolor
-set-option -g @buoyshell-color '#6C6C65'
+set-option -g @buoyshell-color '#6c6c65'
 
 # Set buoyshell dimensions (default: 80%)
 # — value: number%
@@ -124,27 +142,61 @@ set-option -g @buoyshell-x 'W'
 set-option -g @buoyshell-y 'S'
 
 ```
+---
 
-My personal config, used in the main picture is the following:
+## Custom Buoys
+
+BuoyShell supports **user-defined custom buoys** via simple keybindings that launch your own scripts or commands — in either `standard` or `ephemeral` mode.
+
+This is great for:
+- Quickly running project-specific commands like `cargo build`, `npm run`, `pytest`, etc.
+- Toggling your own dashboards, logs, monitors, or CLI tools
+- Integrating personal scripts without cluttering your tmux windows
+
+###  Binding a Custom Buoy
+
+Use the `custom_buoy` helper like this:
+
 ```tmux
-set -g @plugin 'navahas/tmux-buoyshell'
-set-option -g @buoyshell-title ' buoyshell '
-set-option -g @buoyshell-height '80%'
-set-option -g @buoyshell-width '60%'
-set-option -g @buoyshell-x 'W'
-set-option -g @buoyshell-y 'S'
+bind-key -T prefix <key> run-shell "custom_buoy <standard|ephemeral> <buoy-name> '<command>'"
 ```
 
-## Implementation Details
+- `standard | ephemeral`: Choose whether the shell persists (standard) or closes after use (ephemeral)
+- `buoy-name`: Your custom label (avoid spaces), e.g. `logs`, `build`, `test-log`, `unit_tests`
+- `command`: Any shell command, script path, or CLI. Leave empty for a basic popup shell.
 
-- Windows inherit parent session's working directory and state.
-- If you want a specific window to become buoyant, rename it with tmux's default binding `prefix + ,` to buoyshell.
+Examples:
+
+```tmux
+bind-key -T prefix E run-shell "custom_buoy standard rust-build"
+bind-key -T prefix E run-shell "custom_buoy standard rust-build 'cargo build'"
+bind-key -T prefix R run-shell "custom_buoy ephemeral unit_tests '~/scripts/test_suite.sh'"
+bind-key -T prefix Q run-shell "custom_buoy ephemeral test-logs 'tail -f /var/log/syslog'"
+
+```
+
+### Recommended Keys for Custom Buoys
+
+For custom keybindings, we recommend using rarely bound, easy-to-reach keys like:
+
+Q, W, E, R, T, Y, U, H, M, F, G
+
+These keys are generally unbound in tmux and offer a smooth developer workflow.
+
+> Tip: Uppercase bindings (like Q) require holding Shift, e.g. prefix + Shift + Q.
+
+---
 
 ## Advanced Considerations
 
+### Implementation Details
+
+- Windows inherit parent session's working directory and state.
+- If you want a specific window to become the main BuoyShell, rename it with tmux's default binding `prefix + ,` to buoyshell.
+
 ### Changing the Window Position
 
-By default, BuoyShell is created as a new window getting the last available window position. If you prefer a different position, I suggest adding the following keybinds to your tmux config:
+By default, BuoyShells are created as a new window getting the last available window position. If you prefer a different position, I suggest adding the following keybinds to your tmux config:
 
 ```tmux
 bind -r N swap-window -t -1 \; select-window -t -1
@@ -159,6 +211,10 @@ BuoyShell will display the window **including splits**. If you frequently use sp
 
 ![Bottom Full Width](https://raw.githubusercontent.com/navahas/tmux-buoyshell/assets/images/bottom-full.png)
 ![Left Full Height](https://raw.githubusercontent.com/navahas/tmux-buoyshell/assets/images/left-full.png)
+
+---
+
+If you are looking for a more feature-rich floating window implementation, consider [tmux-floax](https://github.com/omerxx/tmux-floax).
 
 ## License
 
