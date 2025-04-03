@@ -11,6 +11,8 @@ custom_command=$3
 custom_command=${3:-}
 custom_command="${custom_command//\"/\\\"}"  # Escape " early
 
+replay_flag=$4
+
 buoy_key=$(tmux show-option -gv '@buoyshell-key')
 ephemeral_buoy_key=$(tmux show-option -gv '@ephemeral-buoyshell-key')
 buoy_session="_buoy-session"
@@ -24,7 +26,7 @@ if [[ "standard" == "${mode}" ]]; then
   elif [[ "$current_session" == "$buoy_session" ]]; then
       tmux detach-client -s "$buoy_session"
   else
-      . ~/.tmux/plugins/tmux-buoyshell/scripts/buoy.sh "$2" "$3"
+      . ~/.tmux/plugins/tmux-buoyshell/scripts/buoy.sh "$2" "$3" "$4"
   fi
 # Universal detach or invoke for Ephemeral Buoy
 elif [[ "ephemeral" == "${mode}" ]]; then
