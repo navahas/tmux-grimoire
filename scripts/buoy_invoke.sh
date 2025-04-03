@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 mode=$1 # standard or ephemeral
 
+custom_buoy=$2
+custom_buoy=$2
+custom_buoy="${custom_buoy// /-}" # Replace spaces with dashes
+custom_buoy="${custom_buoy//[^a-zA-Z0-9_-]/}" # Strip all non-alphanumeric except - and _
+custom_buoy="${custom_buoy,,}" # Convert to lowercase
+
+custom_command=$3
+custom_command=${3:-}
+custom_command="${custom_command//\"/\\\"}"  # Escape " early
+
 buoy_key=$(tmux show-option -gv '@buoyshell-key')
 ephemeral_buoy_key=$(tmux show-option -gv '@ephemeral-buoyshell-key')
 buoy_session="_buoy-session"
@@ -14,7 +24,7 @@ if [[ "standard" == "${mode}" ]]; then
   elif [[ "$current_session" == "$buoy_session" ]]; then
       tmux detach-client -s "$buoy_session"
   else
-      . ~/.tmux/plugins/tmux-buoyshell/scripts/buoy.sh
+      . ~/.tmux/plugins/tmux-buoyshell/scripts/buoy.sh "$2" "$3"
   fi
 # Universal detach or invoke for Ephemeral Buoy
 elif [[ "ephemeral" == "${mode}" ]]; then
@@ -23,8 +33,8 @@ elif [[ "ephemeral" == "${mode}" ]]; then
       tmux detach-client -s "$buoy_session"
   elif [[ "$current_session" == "$ephemeral_buoy_session" ]]; then
       tmux detach-client -s "$ephemeral_buoy_session"
-      tmux kill-session -t "$ephemeral_buoy_session"
+      tmux run-shell "sleep 0.3 && tmux kill-session -t '$ephemeral_buoy_session'" &
   else
-      . ~/.tmux/plugins/tmux-buoyshell/scripts/ephemeral_buoy.sh
+      . ~/.tmux/plugins/tmux-buoyshell/scripts/ephemeral_buoy.sh "$2" "$3"
   fi
 fi
