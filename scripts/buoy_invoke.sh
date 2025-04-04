@@ -20,7 +20,7 @@ ephemeral_buoy_session="_ephemeral-buoy-session"
 
 # Resolve buoy script base path
 buoyspath=$(tmux show-option -gv '@buoyshell-buoyspath' 2>/dev/null)
-: "${buoyspath:=$HOME/.local/custom-buoys}"
+: "${buoyspath:=$HOME/.config/custom-buoys}"
 
 
 if [[ "$custom_command" == buoys/* ]]; then
