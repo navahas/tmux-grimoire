@@ -179,7 +179,7 @@ bind-key -T prefix <key> run-shell "custom_buoy <standard|ephemeral> <buoy-name>
 _Smart Replay: If `--replay` is set, the command is only re-sent if the shell is idle, ensuring that active processes aren't interrupted._
  
 > [!TIP]
-> Check out the [custom-buoys](https://github.com/navahas/custom-buoys) repo for a collection of reusable scripts. Copy, customize, or contribute your own.
+> Check out the [custom-buoys](https://github.com/navahas/custom-buoys) repo for a collection of reusable scripts.
 
 
 Examples:
