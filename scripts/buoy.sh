@@ -51,10 +51,16 @@ fi
 if tmux list-windows -t "$current_session" -F "#{window_name}" | grep -qx "$buoyshell_window_name"; then
     tmux swap-window -s "$current_session:$buoyshell_window_name" -t "$buoyshell_session:$buoyshell_window_name"
 
-    active_cmd=$(tmux display -p -t "$buoyshell_session:$buoyshell_window_name" "#{pane_current_command}")
-    idle_shells=("bash" "zsh" "fish" "sh" "dash" "ksh")
+    pane_pid=$(tmux list-panes -t "$buoyshell_session:$buoyshell_window_name" -F "#{pane_pid}")
+    child_procs=$(pgrep -P "$pane_pid" | wc -l)
 
-    if [[ $replay_flag == "--replay" && -n $buoyshell_custom_command && " ${idle_shells[*]} " == *" $active_cmd "* ]]; then
+    if (( child_procs == 0 )); then
+        is_idle=true
+    else
+        is_idle=false
+    fi
+
+    if [[ $replay_flag == "--replay" && -n $buoyshell_custom_command && $is_idle == true ]]; then
         tmux send-keys -t "$buoyshell_session:$buoyshell_window_name" "clear; bash -c \"${buoyshell_custom_command//\"/\\\"}\"" Enter
     fi
 fi
