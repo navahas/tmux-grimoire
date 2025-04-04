@@ -18,6 +18,15 @@ ephemeral_buoy_key=$(tmux show-option -gv '@ephemeral-buoyshell-key')
 buoy_session="_buoy-session"
 ephemeral_buoy_session="_ephemeral-buoy-session"
 
+# Resolve buoy script base path
+buoyspath=$(tmux show-option -gv '@buoyshell-buoyspath' 2>/dev/null)
+: "${buoyspath:=$HOME/.local/custom-buoys}"
+
+
+if [[ "$custom_command" == buoys/* ]]; then
+  custom_command="$buoyspath/${custom_command#buoys/}"
+fi
+
 # Universal detach or invoke for Persistent Buoy
 if [[ "standard" == "${mode}" ]]; then
   current_session=$(tmux display-message -p '#{client_session}')
@@ -26,7 +35,7 @@ if [[ "standard" == "${mode}" ]]; then
   elif [[ "$current_session" == "$buoy_session" ]]; then
       tmux detach-client -s "$buoy_session"
   else
-      . ~/.tmux/plugins/tmux-buoyshell/scripts/buoy.sh "$2" "$3" "$4"
+      . ~/.tmux/plugins/tmux-buoyshell/scripts/buoy.sh "$custom_buoy" "$custom_command" "$replay_flag"
   fi
 # Universal detach or invoke for Ephemeral Buoy
 elif [[ "ephemeral" == "${mode}" ]]; then
@@ -37,6 +46,6 @@ elif [[ "ephemeral" == "${mode}" ]]; then
       tmux detach-client -s "$ephemeral_buoy_session"
       tmux run-shell "sleep 0.3 && tmux kill-session -t '$ephemeral_buoy_session'" &
   else
-      . ~/.tmux/plugins/tmux-buoyshell/scripts/ephemeral_buoy.sh "$2" "$3"
+      . ~/.tmux/plugins/tmux-buoyshell/scripts/buoy.sh "$custom_buoy" "$custom_command"
   fi
 fi
