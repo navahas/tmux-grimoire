@@ -94,6 +94,10 @@ set-option -g @buoyshell-color '#6c6c65'
 set -g @buoyshell-width "80%"
 set -g @buoyshell-height "80%"
 
+# Set custom path for buoy scripts (default: $HOME/.config/custom-buoys)
+# — value: path/to/folder
+set-option -g @buoyshell-buoyspath '$HOME/custom/scripts/path'
+
 # ——————————————————————————————————————————————
 # Position Presets
 # ——————————————————————————————————————————————
@@ -168,17 +172,22 @@ bind-key -T prefix <key> run-shell "custom_buoy <standard|ephemeral> <buoy-name>
 - `command`: Any shell command, script path, or CLI. Leave empty for a basic popup shell.
 - `--replay` (optional): Only re-run the command if the shell is idle.
 
-> [!NOTE]
+> [!IMPORTANT] 
 > By default, commands only run once when a custom Buoy is triggered.
 > To support repeated executions (e.g., running `cargo build` again), use the `--replay` flag.
-> **Smart Replay**: If `--replay` is set, the command is only re-sent if the shell is idle (e.g., running `bash`, `zsh`, `fish`, etc.), ensuring that active processes aren't interrupted.
+
+_Smart Replay: If `--replay` is set, the command is only re-sent if the shell is idle, ensuring that active processes aren't interrupted._
+ 
+> [!TIP]
+> Check out the [custom-buoys](https://github.com/navahas/custom-buoys) repo for a collection of reusable scripts. Copy, customize, or contribute your own.
+
 
 Examples:
 
 ```tmux
 bind-key -T prefix E run-shell "custom_buoy standard personal-buoy"
 bind-key -T prefix E run-shell "custom_buoy standard rust-build 'cargo build' --replay"
-bind-key -T prefix R run-shell "custom_buoy ephemeral unit_tests '~/scripts/test_suite.sh'"
+bind-key -T prefix R run-shell "custom_buoy ephemeral unit_tests '$HOME/.scripts/test_suite.sh'"
 bind-key -T prefix Q run-shell "custom_buoy ephemeral test-logs 'tail -f /var/log/syslog'"
 
 ```
