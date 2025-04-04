@@ -160,18 +160,24 @@ This is great for:
 Use the `custom_buoy` helper like this:
 
 ```tmux
-bind-key -T prefix <key> run-shell "custom_buoy <standard|ephemeral> <buoy-name> '<command>'"
+bind-key -T prefix <key> run-shell "custom_buoy <standard|ephemeral> <buoy-name> '<command>' [--replay]"
 ```
 
-- `standard | ephemeral`: Choose whether the shell persists (standard) or closes after use (ephemeral)
-- `buoy-name`: Your custom label (avoid spaces), e.g. `logs`, `build`, `test-log`, `unit_tests`
+- `standard | ephemeral`: Choose whether the shell persists (standard) or closes after use (ephemeral).
+- `buoy-name`: Your custom label (avoid spaces), e.g. `logs`, `build`, `test-log`, `unit_tests`.
 - `command`: Any shell command, script path, or CLI. Leave empty for a basic popup shell.
+- `--replay` (optional): Only re-run the command if the shell is idle.
+
+> [!NOTE]
+> By default, commands only run once when a custom Buoy is triggered.
+> To support repeated executions (e.g., running `cargo build` again), use the `--replay` flag.
+> **Smart Replay**: If `--replay` is set, the command is only re-sent if the shell is idle (e.g., running `bash`, `zsh`, `fish`, etc.), ensuring that active processes aren't interrupted.
 
 Examples:
 
 ```tmux
 bind-key -T prefix E run-shell "custom_buoy standard personal-buoy"
-bind-key -T prefix E run-shell "custom_buoy standard rust-build 'cargo build'"
+bind-key -T prefix E run-shell "custom_buoy standard rust-build 'cargo build' --replay"
 bind-key -T prefix R run-shell "custom_buoy ephemeral unit_tests '~/scripts/test_suite.sh'"
 bind-key -T prefix Q run-shell "custom_buoy ephemeral test-logs 'tail -f /var/log/syslog'"
 
@@ -185,7 +191,7 @@ Q, W, E, R, T, Y, U, H, M, F, G
 
 These keys are generally unbound in tmux and offer a smooth developer workflow.
 
-> Tip: Uppercase bindings (like Q) require holding Shift, e.g. prefix + Shift + Q.
+> Friendly Reminder: Uppercase bindings (like Q) require holding Shift, e.g. prefix + Shift + Q.
 
 ---
 
