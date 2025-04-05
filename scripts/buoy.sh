@@ -17,8 +17,25 @@ buoyshell_window_name="${custom_buoy:-buoyshell}"
 buoyshell_custom_command="${custom_command:-}"
 replay_flag=$3
 
-: "${width:=80%}"
-: "${height:=80%}"
+if [[ -n "$custom_buoy" ]]; then
+    custom_width=$(tmux show-option -gv "@buoy-${custom_buoy}-width" 2>/dev/null)
+    custom_height=$(tmux show-option -gv "@buoy-${custom_buoy}-height" 2>/dev/null)
+    custom_x=$(tmux show-option -gv "@buoy-${custom_buoy}-x" 2>/dev/null)
+    custom_y=$(tmux show-option -gv "@buoy-${custom_buoy}-y" 2>/dev/null)
+    custom_color=$(tmux show-option -gv "@buoy-${custom_buoy}-color" 2>/dev/null)
+    custom_title=$(tmux show-option -gv "@buoy-${custom_buoy}-title" 2>/dev/null)
+
+    [[ -n "$custom_width" ]] && buoyshell_width="$custom_width"
+    [[ -n "$custom_height" ]] && buoyshell_height="$custom_height"
+    [[ -n "$custom_x" ]] && buoyshell_x="$custom_x"
+    [[ -n "$custom_x" ]] && buoyshell_x="$custom_x"
+    [[ -n "$custom_y" ]] && buoyshell_y="$custom_y"
+    [[ -n "$custom_color" ]] && buoyshell_window_color="$custom_color"
+    [[ -n "$custom_title" ]] && buoyshell_window_title="$custom_title"
+fi
+
+: "${buoyshell_width:=80%}"
+: "${buoyshell_height:=80%}"
 : "${buoyshell_x:=C}"
 : "${buoyshell_y:=C}"
 : "${buoyshell_window_title:=}"
@@ -74,7 +91,7 @@ tmux display-popup \
     -d '#{pane_current_path}' \
     -x "$buoyshell_x" \
     -y "$buoyshell_y" \
-    -w "$width" -h "$height" \
+    -w "$buoyshell_width" -h "$buoyshell_height" \
     -b "rounded" \
     -S "fg=$buoyshell_window_color" \
     -T "$popup_title" \
