@@ -13,8 +13,6 @@ custom_command="${custom_command//\"/\\\"}"  # Escape " early
 
 replay_flag=$4
 
-buoy_key=$(tmux show-option -gv '@buoyshell-key')
-ephemeral_buoy_key=$(tmux show-option -gv '@ephemeral-buoyshell-key')
 buoy_session="_buoy-session"
 ephemeral_buoy_session="_ephemeral-buoy-session"
 

@@ -3,7 +3,12 @@ buoy_key=$(tmux show-option -gv '@buoyshell-key')
 ephemeral_buoy_key=$(tmux show-option -gv '@ephemeral-buoyshell-key')
 
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-tmux set-environment -g PATH "$PLUGIN_DIR/bin:$(tmux show-environment -g PATH | cut -d= -f2-)"
+current_path=$(tmux show-environment -g PATH | cut -d= -f2-)
+
+# Append only if not present, to prevent adding to PATH multiple times
+if [[ ":$current_path:" != *":$PLUGIN_DIR/bin:"* ]]; then
+  tmux set-environment -g PATH "$PLUGIN_DIR/bin:$current_path"
+fi
 
 : "${buoy_key:=f}"
 : "${ephemeral_buoy_key:=F}"
