@@ -181,7 +181,6 @@ _Smart Replay: If `--replay` is set, the command is only re-sent if the shell is
 > [!TIP]
 > Check out the [custom-buoys](https://github.com/navahas/custom-buoys) repo for a collection of reusable scripts.
 
-
 Examples:
 
 ```tmux
@@ -190,6 +189,39 @@ bind-key -T prefix E run-shell "custom_buoy standard rust-build 'cargo build' --
 bind-key -T prefix R run-shell "custom_buoy ephemeral unit_tests '$HOME/.scripts/test_suite.sh'"
 bind-key -T prefix Q run-shell "custom_buoy ephemeral test-logs 'tail -f /var/log/syslog'"
 
+```
+
+### Appearance Customization
+
+Each custom buoy can have its own position, size, color, and title by using per-buoy options in your `~/.tmux.conf`.
+
+These options follow this format:
+
+```tmux
+set-option -g @buoy-<buoy-name>-color
+set-option -g @buoy-<buoy-name>-x
+set-option -g @buoy-<buoy-name>-y
+set-option -g @buoy-<buoy-name>-width
+set-option -g @buoy-<buoy-name>-height
+```
+> If no specific values are provided, BuoyShell will fall back to the global options.
+
+Examples:
+
+```tmux
+bind-key -T prefix q run-shell "custom_buoy standard dev"
+set-option -g @buoy-dev-color '#c2b3e9'
+set-option -g @buoy-dev-x 'C'
+set-option -g @buoy-dev-y 'S'
+set-option -g @buoy-dev-width '100%'
+set-option -g @buoy-dev-height '50%'
+
+bind-key -T prefix G run-shell "custom_buoy ephemeral gitlog \"git log --oneline --graph --decorate --all\""
+set-option -g @buoy-gitlog-color '#d98870'
+set-option -g @buoy-gitlog-x 'W'
+set-option -g @buoy-gitlog-y 'C'
+set-option -g @buoy-gitlog-width '50%'
+set-option -g @buoy-gitlog-height '100%'
 ```
 
 ### Recommended Keys for Custom Buoys
@@ -231,7 +263,7 @@ BuoyShell will display the window **including splits**. If you frequently use sp
 
 ---
 
-If you are looking for a more feature-rich floating window implementation, consider [tmux-floax](https://github.com/omerxx/tmux-floax).
+If you are looking for a single feature-rich floating shell implementation, consider [tmux-floax](https://github.com/omerxx/tmux-floax).
 
 ## License
 
