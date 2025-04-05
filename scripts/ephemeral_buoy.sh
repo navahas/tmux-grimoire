@@ -40,13 +40,14 @@ popup_title="${buoyshell_window_title}"
 [[ -n $custom_buoy ]] && popup_title="${popup_title:+$popup_title|} $custom_buoy "
 
 session_dir=$(tmux display-message -t "$current_session" -p '#{pane_current_path}')
-if ! tmux has-session -t "$buoyshell_session" 2>/dev/null; then
-    TMUX='' tmux new-session -d -s "$buoyshell_session" -n "$temp_window" -c "$session_dir"
-    tmux set-option -t "$buoyshell_session" status off
-fi
 
 if [[ -n $buoyshell_custom_command ]]; then
-    tmux send-keys -t "$buoyshell_session:$temp_window" "tput clear; bash -c \"${buoyshell_custom_command//\"/\\\"}\"" Enter
+    TMUX='' tmux new-session -d -s "$buoyshell_session" -n "$temp_window" -c "$session_dir" \; \
+        set-option -t "$buoyshell_session" status off \; \
+        send-keys -t "$buoyshell_session:$temp_window" "tput clear; bash -c \"${buoyshell_custom_command//\"/\\\"}\"" Enter
+else
+    TMUX='' tmux new-session -d -s "$buoyshell_session" -n "$temp_window" -c "$session_dir" \; \
+        set-option -t "$buoyshell_session" status off
 fi
 
 tmux set-option -g mouse off
@@ -62,5 +63,4 @@ tmux display-popup \
     "tmux attach-session -t '$buoyshell_session' \; select-window -t '$temp_window'"
 
 tmux run-shell "sleep 0.3 && tmux kill-session -t '$buoyshel_session'" &
-
 tmux set-option -g mouse "$original_mouse_setting"
