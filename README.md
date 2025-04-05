@@ -195,7 +195,7 @@ bind-key -T prefix Q run-shell "custom_buoy ephemeral test-logs 'tail -f /var/lo
 
 Each custom buoy can have its own position, size, color, and title by using per-buoy options in your `~/.tmux.conf`.
 
-https://raw.githubusercontent.com/navahas/tmux-buoyshell/assets/videos/buoy-appearance.mov
+https://github.com/user-attachments/assets/d609c528-3abf-4baa-afae-4b7060768cd8
 
 These options follow this format:
 
