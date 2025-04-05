@@ -42,7 +42,6 @@ elif [[ "ephemeral" == "${mode}" ]]; then
       tmux detach-client -s "$buoy_session"
   elif [[ "$current_session" == "$ephemeral_buoy_session" ]]; then
       tmux detach-client -s "$ephemeral_buoy_session"
-      tmux run-shell "sleep 0.3 && tmux kill-session -t '$ephemeral_buoy_session'" &
   else
       . ~/.tmux/plugins/tmux-buoyshell/scripts/ephemeral_buoy.sh "$custom_buoy" "$custom_command"
   fi
