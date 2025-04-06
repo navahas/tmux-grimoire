@@ -20,9 +20,9 @@ if [[ "$current_session" == "$BUOY_SESSION" || "$current_session" == "$EPHEMERAL
     exit 0
 fi
 
-# Deferred path: Only do the more expensive operations when actually launching a buoy
-# Lazy load the buoy configuration
-buoyspath=$(tmux show-option -gvq '@buoyshell-buoyspath' 2>/dev/null || echo "$HOME/.config/custom-buoys")
+# Resolve buoy script base path
+buoyspath=$(tmux show-option -gv '@buoyshell-buoyspath' 2>/dev/null)
+: "${buoyspath:=$HOME/.config/custom-buoys}"
 
 if [[ "$custom_command" == buoys/* ]]; then
   custom_command="$buoyspath/${custom_command#buoys/}"
