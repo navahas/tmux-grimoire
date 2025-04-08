@@ -50,6 +50,9 @@ else
         set-option -t "$buoyshell_session" status off
 fi
 
+tmux set-hook -t "$buoyshell_session" client-detached \
+  "run-shell 'tmux kill-session -t \"$buoyshell_session\"'"
+
 tmux set-option -g mouse off
 tmux display-popup \
     -E \
@@ -62,5 +65,4 @@ tmux display-popup \
     -T "$popup_title" \
     "tmux attach-session -t '$buoyshell_session' \; select-window -t '$temp_window'"
 
-tmux run-shell "sleep 0.3 && tmux kill-session -t '$buoyshell_session'" &
 tmux set-option -g mouse "$original_mouse_setting"
