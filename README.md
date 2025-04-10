@@ -125,7 +125,7 @@ set-option -g @buoyshell-y 'M'
  
 # — Top Center
 set-option -g @buoyshell-x 'C'
-set-option -g @buoyshell-y 'P'
+set-option -g @buoyshell-y 'M'
 set-option -g @buoyshell-height '50%'
 set-option -g @buoyshell-width '100%'
  
