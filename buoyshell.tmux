@@ -13,5 +13,5 @@ fi
 : "${buoy_key:=f}"
 : "${ephemeral_buoy_key:=F}"
 
-tmux bind-key "$buoy_key" run-shell ". ~/.tmux/plugins/tmux-buoyshell/scripts/buoy_invoke.sh standard"
-tmux bind-key "$ephemeral_buoy_key" run-shell ". ~/.tmux/plugins/tmux-buoyshell/scripts/buoy_invoke.sh ephemeral"
+tmux bind-key "$buoy_key" run-shell "~/.tmux/plugins/tmux-buoyshell/scripts/buoy_invoke.sh standard"
+tmux bind-key "$ephemeral_buoy_key" run-shell "~/.tmux/plugins/tmux-buoyshell/scripts/buoy_invoke.sh ephemeral"
