@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 buoy_key=$(tmux show-option -gv '@buoyshell-key')
 ephemeral_buoy_key=$(tmux show-option -gv '@ephemeral-buoyshell-key')
-buoy_kill_key=$(tmux show-option -gv '@ephemeral-buoyshell-key')
+buoy_kill_key=$(tmux show-option -gv '@buoyshell-kill-key')
 
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 current_path=$(tmux show-environment -g PATH | cut -d= -f2-)
