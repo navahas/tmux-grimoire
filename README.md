@@ -81,8 +81,8 @@ You can customize the plugin behavior by setting these options in your `~/.tmux.
 set -g @buoyshell-key "f"
 # Change the ephemeral buoyshell keybinding (default: F)
 set -g @ephemeral-buoyshell-key "F"
-# Change the buoyshell kill keybinding (default: k)
-set -g @buoyshell-kill-key "k"
+# Change the buoyshell kill keybinding (default: C)
+set -g @buoyshell-kill-key "C"
 
 # Set buoyshell title
 set-option -g @buoyshell-title ''

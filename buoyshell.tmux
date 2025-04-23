@@ -13,7 +13,7 @@ fi
 
 : "${buoy_key:=f}"
 : "${ephemeral_buoy_key:=F}"
-: "${buoy_kill_key:=k}"
+: "${buoy_kill_key:=C}"
 
 tmux bind-key "$buoy_key" run-shell "~/.tmux/plugins/tmux-buoyshell/scripts/buoy_invoke.sh standard"
 tmux bind-key "$ephemeral_buoy_key" run-shell "~/.tmux/plugins/tmux-buoyshell/scripts/buoy_invoke.sh ephemeral"
