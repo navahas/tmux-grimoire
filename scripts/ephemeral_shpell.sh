@@ -44,9 +44,9 @@ esac
 : "${grimoire_window_title:=}"
 : "${grimoire_window_color:=}"
 
-grimoire_name="${grimoire_window_title:-grimoire}"
+grimoire_name="${grimoire_window_title:-}"
 shpell_name="${custom_shpell:-main}"
-popup_title="$grimoire_name | $shpell_name "
+popup_title="$grimoire_name| $shpell_name "
 
 session_dir=$(tmux display-message -t "$current_session" -p '#{pane_current_path}')
 

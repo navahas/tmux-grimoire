@@ -2,7 +2,7 @@
 ![tmux 3.2+](https://img.shields.io/badge/tmux-3.2+-brightgreen)
 ![Customizable](https://img.shields.io/badge/feature-Custom_Buoys-orange)
 
-# BuoyShell
+# Tmux Grimoire
 
 A tmux plugin for lightweight, fast, **popup shells with custom scripts** — perfect for any terminal-driven environment workflows.
 
@@ -13,15 +13,14 @@ https://github.com/user-attachments/assets/2d0f8ea0-d575-49f6-aa72-aaf2a77ebb07
 
 ## Overview
 
-BuoyShell is a minimal tmux plugin that provides "buoyant" capability to shell windows in any tmux session, enabling quick access without leaving the current workflow.
-
-The plugin allows toggling designated shell windows within each session, making it particularly useful for terminal-based editors like Vim/Neovim, Emacs, Helix, Kakoune... where a quick-access shell is needed without cluttering the workspace.
+**tmux-grimoire** allows you to define and summon popup shells inside tmux, called `shpells`. These can run any command or script and are especially useful when working inside terminal-based editors like Vim/Neovim, Emacs, Helix, or Kakoune.
 
 ### Features
 
-- Toggle popup shell windows per tmux session using custom keybindings  
-- Customize the position, size, color, and title of your BuoyShell popup  
-- Create custom BuoyShell popups with your own commands or scripts
+- Floating shell windows invoked via custom keybindings
+- Support for persistent and ephemeral (disposable) shpells
+- Simple, semantic positioning (e.g. `bottom-right`, `top-left`)
+- Per-shpell customization of size, color, and title
 
 ---
 
@@ -31,7 +30,7 @@ The plugin allows toggling designated shell windows within each session, making 
 
 Add to `~/.tmux.conf`:
 ```tmux
-set -g @plugin 'navahas/tmux-buoyshell'
+set -g @plugin 'navahas/tmux-grimoire'
 ```
 
 Install with `prefix + I`
@@ -39,196 +38,144 @@ Install with `prefix + I`
 ### Manual Installation
 
 ```bash
-git clone https://github.com/navahas/tmux-buoyshell.git ~/.tmux/plugins/tmux-buoyshell
+git clone https://github.com/navahas/tmux-grimoire.git ~/.tmux/plugins/tmux-grimoire
 ```
 
 Add to `~/.tmux.conf`:
 ```tmux
-run-shell ~/.tmux/plugins/tmux-buoyshell/buoyshell.tmux
+run-shell ~/.tmux/plugins/tmux-grimoire/grimoire.tmux
 ```
 ---
 
-## Usage
+## Default Usage
 
-Press `prefix + f` to toggle the **main BuoyShell** popup (enabled by default).
-
-You can toggle **any buoy on or off** — either the default one (`prefix + f`) or any custom one you've created. Pressing the same key again will close the popup.
+prefix + f    # Opens the main shpell
+prefix + F    # Opens an ephemeral shpell
+prefix + C    # Kills the current shpell window
 
 ### Quick Configuration
 
 ```tmux
-set -g @plugin 'navahas/tmux-buoyshell'
-set-option -g @buoyshell-title ' buoyshell '
-set-option -g @buoyshell-color '' # or add some color like #dcdcaa
-set-option -g @buoyshell-height '80%'
-set-option -g @buoyshell-width '60%'
-set-option -g @buoyshell-x 'W'
-set-option -g @buoyshell-y 'S'
+set -g @plugin 'navahas/tmux-grimoire'
+set-option -g @grimoire-title ' grimoire '
+set-option -g @grimoire-color '' # or add some color like #dcdcaa
+set-option -g @grimoire-height '80%'
+set-option -g @grimoire-width '60%'
+set-option -g @grimoire-position 'right'
 
-# Custom Buoy Setup
-bind-key -T prefix Q run-shell "custom_buoy standard personal-buoy"
-bind-key -T prefix b run-shell "custom_buoy standard directories 'ls -la'"
-bind-key -T prefix W run-shell "custom_buoy ephemeral system-monitor 'htop'"
+# Custom Shpell Setup
+bind-key -T prefix Q run-shell "custom_shpell standard personal-shpell"
+bind-key -T prefix b run-shell "custom_shpell standard directories 'ls -la'"
+bind-key -T prefix W run-shell "custom_shpell ephemeral system-monitor 'htop'"
 ```
 
 You can customize the plugin behavior by setting these options in your `~/.tmux.conf`:
 
 ```tmux
-# ——————————————————————————————————————————————
 # Main Options
-# ——————————————————————————————————————————————
-# Change the toggle keybinding (default: f)
-set -g @buoyshell-key "f"
-# Change the ephemeral buoyshell keybinding (default: F)
-set -g @ephemeral-buoyshell-key "F"
-# Change the buoyshell kill keybinding (default: C)
-set -g @buoyshell-kill-key "C"
+set -g @grimoire-key "f"
+set -g @ephemeral-grimoire-key "F"
+set -g @grimoire-kill-key "C"
 
-# Set buoyshell title
-set-option -g @buoyshell-title ''
+set-option -g @grimoire-title ''
+set-option -g @grimoire-color '#6c6c65' # — value: '#hexcolor'
+set-option -g @grimoire-width '80%' # — value: number%
+set-option -g @grimoire-height '70%' # — value: number%
+set-option -g @grimoire-position 'top-left'
+# (@grimoire-position options)
+# 'top-center'
+# 'top-right'
+# 'bottom-left'
+# 'bottom-center'
+# 'bottom-right'
+# 'left'
+# 'right'
+# 'center' - default
 
-# Set buoyshell border color (default is empty: fallbacks to your config)
-# — value: #hexcolor
-set-option -g @buoyshell-color '#6c6c65'
-
-# Set buoyshell dimensions (default: 80%)
-# — value: number%
-set -g @buoyshell-width "80%"
-set -g @buoyshell-height "80%"
-
-# Set custom path for buoy scripts (default: $HOME/.config/custom-buoys)
+# Set custom path for shpell scripts (default: $HOME/.config/grimoire)
 # — value: path/to/folder
-set-option -g @buoyshell-buoyspath '$HOME/custom/scripts/path'
-
-# ——————————————————————————————————————————————
-# Position Presets
-# ——————————————————————————————————————————————
-# https://man.openbsd.org/man1/tmux.1#display-menu
-
-# — Centered (default)
-set-option -g @buoyshell-x 'C'
-set-option -g @buoyshell-y 'C'
-
-# — Middle Left
-set-option -g @buoyshell-x 'P'
-set-option -g @buoyshell-y 'C'
-set-option -g @buoyshell-height '100%'
-set-option -g @buoyshell-width '50%'
-
-# — Middle Right
-set-option -g @buoyshell-x 'W'
-set-option -g @buoyshell-y 'C'
-set-option -g @buoyshell-height '100%'
-set-option -g @buoyshell-width '50%'
-
-# — Top Left
-set-option -g @buoyshell-x 'P'
-set-option -g @buoyshell-y 'M'
- 
-# — Top Center
-set-option -g @buoyshell-x 'C'
-set-option -g @buoyshell-y 'M'
-set-option -g @buoyshell-height '50%'
-set-option -g @buoyshell-width '100%'
- 
-# — Top Right Corner
-set-option -g @buoyshell-x 'W'
-set-option -g @buoyshell-y 'P'
- 
-# — Bottom Left
-set-option -g @buoyshell-x 'P'
-set-option -g @buoyshell-y 'S'
-
-# — Bottom Center
-set-option -g @buoyshell-x 'C'
-set-option -g @buoyshell-y 'S'
-set-option -g @buoyshell-height '50%'
-set-option -g @buoyshell-width '100%'
-
-# — Bottom Right
-set-option -g @buoyshell-x 'W'
-set-option -g @buoyshell-y 'S'
+set-option -g @grimoire-path '$HOME/custom/scripts/path'
 
 ```
 ---
 
-## Custom Buoys
+## What Is a Shpell?
 
-BuoyShell supports **user-defined custom buoys** via simple keybindings that launch your own scripts or commands — in either `standard` or `ephemeral` mode.
+A `shpell` is a popup shell window that can be configured to run any script, command, or dashboard inside your tmux session. Think of it as a summonable workspace that doesn’t disrupt your current terminal flow.
+
+## Custom Shpells
+
+You can bind any shell command or script to a custom key using the `custom_shpell` helper.
 
 This is great for:
 - Quickly running project-specific commands like `cargo build`, `npm run`, `pytest`, etc.
 - Toggling your own dashboards, logs, monitors, or CLI tools
 - Integrating personal scripts without cluttering your tmux windows
 
-###  Binding a Custom Buoy
+###  Binding a Custom Shpell
 
-Use the `custom_buoy` helper like this:
+Use the `custom_shpell` helper like this:
 
 ```tmux
-bind-key -T prefix <key> run-shell "custom_buoy <standard|ephemeral> <buoy-name> '<command>' [--replay]"
+bind-key -T prefix <key> run-shell "custom_shpell <standard|ephemeral> <shpell-name> '<command>' [--replay]"
 ```
 
 - `standard | ephemeral`: Choose whether the shell persists (standard) or closes after use (ephemeral).
-- `buoy-name`: Your custom label (avoid spaces), e.g. `logs`, `build`, `test-log`, `unit_tests`.
+- `shpell-name`: Your custom label (avoid spaces), e.g. `logs`, `build`, `test-log`, `unit_tests`.
 - `command`: Any shell command, script path, or CLI. Leave empty for a basic popup shell.
-- `--replay` (optional): Only re-run the command if the shell is idle.
+- `--replay` (optional): Re-runs the command only if the popup is idle.
 
-> [!IMPORTANT] 
-> By default, commands only run once when a custom Buoy is triggered.
+> [!IMPORTANT]
+> By default, commands only run once when a custom shpell is triggered.
 > To support repeated executions (e.g., running `cargo build` again), use the `--replay` flag.
 
 _Smart Replay: If `--replay` is set, the command is only re-sent if the shell is idle, ensuring that active processes aren't interrupted._
  
 > [!TIP]
-> Check out the [custom-buoys](https://github.com/navahas/custom-buoys) repo for a collection of reusable scripts.
+> Check out the [grimoire](https://github.com/navahas/grimoire) repo for a collection of reusable scripts (shpells).
 
 Examples:
 
 ```tmux
-bind-key -T prefix E run-shell "custom_buoy standard personal-buoy"
-bind-key -T prefix E run-shell "custom_buoy standard rust-build 'cargo build' --replay"
-bind-key -T prefix R run-shell "custom_buoy ephemeral unit_tests '$HOME/.scripts/test_suite.sh'"
-bind-key -T prefix Q run-shell "custom_buoy ephemeral test-logs 'tail -f /var/log/syslog'"
-
+bind-key -T prefix E run-shell "custom_shpell standard personal-shpell"
+bind-key -T prefix E run-shell "custom_shpell standard rust-build 'cargo build' --replay"
+bind-key -T prefix R run-shell "custom_shpell ephemeral unit_tests '$HOME/.scripts/test_suite.sh'"
+bind-key -T prefix Q run-shell "custom_shpell ephemeral test-logs 'tail -f /var/log/syslog'"
 ```
 
-### Appearance Customization
+### Per-Shpell Customization
 
-Each custom buoy can have its own position, size, color, and title by using per-buoy options in your `~/.tmux.conf`.
+Each custom shpell can have its own position, size, color, and title by using per-shpell options in your `~/.tmux.conf`.
 
 https://github.com/user-attachments/assets/d609c528-3abf-4baa-afae-4b7060768cd8
 
 These options follow this format:
 
 ```tmux
-set-option -g @buoy-<buoy-name>-color
-set-option -g @buoy-<buoy-name>-x
-set-option -g @buoy-<buoy-name>-y
-set-option -g @buoy-<buoy-name>-width
-set-option -g @buoy-<buoy-name>-height
+set-option -g @shpell-<shpell-name>-color
+set-option -g @shpell-<shpell-name>-position
+set-option -g @shpell-<shpell-name>-width
+set-option -g @shpell-<shpell-name>-height
 ```
-> If no specific values are provided, BuoyShell will fall back to the global options.
+> All options fallback to the global values defined with @grimoire-*.
 
 Examples:
 
 ```tmux
-bind-key -T prefix q run-shell "custom_buoy standard dev"
-set-option -g @buoy-dev-color '#c2b3e9'
-set-option -g @buoy-dev-x 'C'
-set-option -g @buoy-dev-y 'S'
-set-option -g @buoy-dev-width '100%'
-set-option -g @buoy-dev-height '50%'
+bind-key -T prefix q run-shell "custom_shpell standard dev"
+set-option -g @shpell-dev-color '#c2b3e9'
+set-option -g @shpell-dev-position 'top-right'
+set-option -g @shpell-dev-width '100%'
+set-option -g @shpell-dev-height '50%'
 
-bind-key -T prefix G run-shell "custom_buoy ephemeral gitlog \"git log --oneline --graph --decorate --all\""
-set-option -g @buoy-gitlog-color '#d98870'
-set-option -g @buoy-gitlog-x 'W'
-set-option -g @buoy-gitlog-y 'C'
-set-option -g @buoy-gitlog-width '50%'
-set-option -g @buoy-gitlog-height '100%'
+bind-key -T prefix G run-shell "custom_shpell ephemeral gitlog \"git log --oneline --graph --decorate --all\""
+set-option -g @shpell-gitlog-color '#d98870'
+set-option -g @shpell-gitlog-position 'bottom-left'
+set-option -g @shpell-gitlog-width '50%'
+set-option -g @shpell-gitlog-height '100%'
 ```
 
-### Recommended Keys for Custom Buoys
+### Recommended Keys for Custom Shpells
 
 For custom keybindings, we recommend using rarely bound, easy-to-reach keys like:
 
@@ -242,25 +189,20 @@ These keys are generally unbound in tmux and offer a smooth developer workflow.
 
 ## Advanced Considerations
 
-### Implementation Details
-
-- Windows inherit parent session's working directory and state.
-- Use `prefix + ,` to rename any window to `buoyshell` if you wish to make it the main BuoyShell.
-
 ### Changing the Window Position
 
-By default, BuoyShells are created as a new window getting the last available window position. If you prefer a different position, I suggest adding the following keybinds to your tmux config:
+By default, shpells are created as a new window getting the last available window position. If you prefer a different position, I suggest adding the following keybinds to your tmux config:
 
 ```tmux
 bind -r N swap-window -t -1 \; select-window -t -1
 bind -r M swap-window -t +1 \; select-window -t +1
 ```
 
-This allows you to move not only BuoyShell, but any window position in your tmux session. Some users might prefer BuoyShell at the end of the window list while still being easily accessible from the toggle keybind. 
+This allows you to move any window position in your tmux session. Some users might prefer specific s at the end of the window list while still being easily accessible from the toggle keybind.
 
 ### Handling Splits
 
-BuoyShell will display the window **including splits**. If you frequently use splits in the secondary window (which you want to act as BuoyShell), a resize with positioning is a good approach.
+Tmux-grimoire will display the window **including splits**. If you frequently use splits in the secondary window (which you want to act as a ), a resize with positioning is a good approach.
 
 ![Bottom Full Width](https://raw.githubusercontent.com/navahas/tmux-buoyshell/assets/images/bottom-full.png)
 ![Left Full Height](https://raw.githubusercontent.com/navahas/tmux-buoyshell/assets/images/left-full.png)
