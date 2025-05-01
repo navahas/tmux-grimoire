@@ -49,9 +49,11 @@ run-shell ~/.tmux/plugins/tmux-grimoire/grimoire.tmux
 
 ## Default Usage
 
+```bash
 prefix + f    # Opens the main shpell
 prefix + F    # Opens an ephemeral shpell
 prefix + C    # Kills the current shpell window
+```
 
 ### Quick Configuration
 
