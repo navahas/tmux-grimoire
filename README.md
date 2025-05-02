@@ -7,7 +7,6 @@ A lightweight tmux plugin for summonable popup shells, aka `shpells`, driven by 
 
 ![Preview](https://raw.githubusercontent.com/navahas/tmux-grimoire/assets/images/grimoire.png)
 
----
 ## Quickstart
 
 Install with TPM:
