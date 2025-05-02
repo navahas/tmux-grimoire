@@ -4,7 +4,7 @@
 
 # Tmux Grimoire
 
-A lightweight tmux plugin for summonable popup shells (aka shpells) driven by custom scripts—perfect for any terminal-centric workflow.
+A lightweight tmux plugin for summonable popup shells, aka `shpells`, driven by custom scripts.
 
 ![Preview](https://raw.githubusercontent.com/navahas/tmux-buoyshell/assets/images/main.png)
 
@@ -14,11 +14,12 @@ https://github.com/user-attachments/assets/2d0f8ea0-d575-49f6-aa72-aaf2a77ebb07
 ---
 ## Quickstart
 
-1. Install with TPM:
+Install with TPM:
 ```tmux
 set -g @plugin 'navahas/tmux-grimoire'
 ```
 Press `prefix + I` to install.
+> **Note:** If you’d rather install manually, see [Manual Installation](#manual-installation) below.
 
 ### Minimal config to get started:
 
@@ -54,16 +55,7 @@ prefix + C    # Kills the current shpell window
 ```
 ---
 
-## Installation
-
-### TPM (recommended)
-
-```tmux
-set -g @plugin 'navahas/tmux-grimoire'
-# reload & prefix + I
-```
-
-### Manual Installation
+#### Manual Installation
 
 ```bash
 git clone https://github.com/navahas/tmux-grimoire.git ~/.tmux/plugins/tmux-grimoire
@@ -111,11 +103,12 @@ Create custom popup shells (`shpells`) to launch any script, CLI tool, or comman
 ### Binding Syntax
 
 ```tmux
-bind-key -T prefix <key> run-shell "custom_shpell <standard|ephemeral> <shpell-name> '<command>' [--replay]"
+bind-key -T prefix <key> \
+  run-shell "custom_shpell <standard|ephemeral> <shpell-name> '<command>' [--replay]"
 ```
-- `standard | ephemeral`: choose either a persistent shell (standard) or closes after use (ephemeral).
-- `shpell-name`: identifier custom label (avoid spaces), e.g. `logs`, `build`, `test-log`, `unit_tests`.
-- `command`: shell command or script path; omit for a blank shell.
+- `standard | ephemeral`: Choose either a persistent shell (standard) or close after use (ephemeral).
+- `shpell-name`: Custom label identifier (avoid spaces), e.g. `logs`, `build`, `test-log`, `unit_tests`.
+- `command`: Shell command or script path to be executed; omit for a blank shell.
 - `--replay` (optional): re-run only when idle (for tasks like builds).
 
 > [!IMPORTANT]
@@ -127,18 +120,17 @@ _Smart Replay: If `--replay` is set, the command is only re-sent if the shell is
 > [!TIP]
 > Check out the [grimoire](https://github.com/navahas/grimoire) repo for a collection of reusable scripts (shpells).
 
-Example Bindings
+Bindings Examples:
 ```tmux
 bind-key -T prefix E run-shell "custom_shpell standard personal-shpell"
 bind-key -T prefix b run-shell "custom_shpell standard rust-build 'cargo build' --replay"
-bind-key -T prefix R run-shell "custom_shpell ephemeral unit_tests '$HOME/.scripts/test_suite.sh'"
+bind-key -T prefix R run-shell "custom_shpell ephemeral unit_tests '$HOME/.scripts/foo.sh'"
 bind-key -T prefix Q run-shell "custom_shpell ephemeral test-logs 'tail -f /var/log/syslog'"
 ```
 
 ### Per-Shpell Options
 
-Override size, color, title, position per shpell:
-
+Override size, color, title, position per shpell.
 ```tmux
 set -g @shpell-<shpell-name>-color
 set -g @shpell-<shpell-name>-position
@@ -192,6 +184,7 @@ Shpells respect existing splits. For best layouts, explicitly size/position or u
 
 ---
 
+#### Alternative
 If you are looking for a single feature-rich floating shell implementation, consider [tmux-floax](https://github.com/omerxx/tmux-floax).
 
 ## License
