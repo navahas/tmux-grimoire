@@ -118,6 +118,7 @@ Bindings Examples:
 ```tmux
 bind-key -T prefix E run-shell "custom_shpell standard personal-shpell"
 bind-key -T prefix b run-shell "custom_shpell standard rust-build 'cargo build' --replay"
+bind-key -T prefix W run-shell "custom_shpell standard my-bar '$HOME/.config/foo/bar.sh' --replay"
 # Using the scripts inside @grimoire-path '$HOME/.config/grimoire'
 bind-key -T prefix R run-shell "custom_shpell ephemeral test 'sphell/test.sh'"
 bind-key -T prefix Q run-shell "custom_shpell ephemeral test-logs 'tail -f /var/log/syslog'"
