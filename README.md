@@ -1,6 +1,5 @@
 ![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![tmux 3.2+](https://img.shields.io/badge/tmux-3.2+-brightgreen)
-![Customizable](https://img.shields.io/badge/feature-Custom_Buoys-orange)
 
 # Tmux Grimoire
 
