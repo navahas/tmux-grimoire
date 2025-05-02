@@ -119,7 +119,8 @@ Bindings Examples:
 ```tmux
 bind-key -T prefix E run-shell "custom_shpell standard personal-shpell"
 bind-key -T prefix b run-shell "custom_shpell standard rust-build 'cargo build' --replay"
-bind-key -T prefix R run-shell "custom_shpell ephemeral unit_tests '$HOME/.scripts/foo.sh'"
+# Using the scripts inside @grimoire-path '$HOME/.config/grimoire'
+bind-key -T prefix R run-shell "custom_shpell ephemeral test 'sphell/test.sh'"
 bind-key -T prefix Q run-shell "custom_shpell ephemeral test-logs 'tail -f /var/log/syslog'"
 ```
 
@@ -174,8 +175,10 @@ bind -r M swap-window -t +1 \; select-window -t +1
 
 Shpells respect existing splits. For best layouts, explicitly size/position or use full-width examples:
 
-![Bottom Full Width](https://raw.githubusercontent.com/navahas/tmux-buoyshell/assets/images/bottom-full.png)
-![Left Full Height](https://raw.githubusercontent.com/navahas/tmux-buoyshell/assets/images/left-full.png)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/navahas/tmux-buoyshell/assets/images/bottom.png" width="400"/>
+  <img src="https://raw.githubusercontent.com/navahas/tmux-buoyshell/assets/images/left.png" width="400"/>
+</p>
 
 ---
 
