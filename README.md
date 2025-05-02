@@ -73,7 +73,7 @@ set -g @ephemeral-grimoire-key "F"
 set -g @grimoire-kill-key "C"
 
 # Appearance
-set -g @grimoire-title ''
+set -g @grimoire-title ' 󱥭 ' # If you have a nerdfont to use icons
 set -g @grimoire-color '#6c6c65'
 set -g @grimoire-width '80%'
 set -g @grimoire-height '70%'
