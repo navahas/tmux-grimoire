@@ -6,10 +6,7 @@
 
 A lightweight tmux plugin for summonable popup shells, aka `shpells`, driven by custom scripts.
 
-![Preview](https://raw.githubusercontent.com/navahas/tmux-buoyshell/assets/images/main.png)
-
-### Showcase
-https://github.com/user-attachments/assets/2d0f8ea0-d575-49f6-aa72-aaf2a77ebb07
+![Preview](https://raw.githubusercontent.com/navahas/tmux-grimoire/assets/images/grimoire.png)
 
 ---
 ## Quickstart
@@ -44,10 +41,10 @@ set -g @shpell-gitlog-width    '50%'
 set -g @shpell-gitlog-height   '100%'
 ```
 Now hit:
-- `prefix + q` => your dev shell
-- `prefix + G` => one-off gitlog shell
+- `prefix + q` —> your dev shell
+- `prefix + G` —> ephemeral gitlog shell
 
-Default keys (no config needed):
+#### Default keybinds:
 ```bash
 prefix + f    # Opens the main shpell
 prefix + F    # Opens an ephemeral shpell
@@ -60,7 +57,6 @@ prefix + C    # Kills the current shpell window
 ```bash
 git clone https://github.com/navahas/tmux-grimoire.git ~/.tmux/plugins/tmux-grimoire
 ```
-
 Add to `~/.tmux.conf`:
 ```tmux
 run-shell ~/.tmux/plugins/tmux-grimoire/grimoire.tmux
