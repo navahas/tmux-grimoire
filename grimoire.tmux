@@ -62,18 +62,12 @@ fi
 grimoire_helper_key="H"
 
 # Batch keybindings and options via heredoc to minimize tmux server calls
-# Wrapped in command group with || true to prevent TPM source failures
-# (returns exit 0 even if tmux server unavailable)
-{ tmux <<TMUX
-    bind-key "$grimoire_key" run-shell "$PLUGIN_DIR/scripts/cast_shpell.sh standard"
-    bind-key "$ephemeral_grimoire_key" run-shell "$PLUGIN_DIR/scripts/cast_shpell.sh
-    ephemeral"
-    bind-key "$grimoire_kill_key" run-shell "$PLUGIN_DIR/scripts/cast_shpell.sh kill"
-    bind-key "$grimoire_helper_key" run-shell "$PLUGIN_DIR/scripts/cast_shpell.sh
-    ephemeral grimoire '$PLUGIN_DIR/bin/logo'"
-    set -g @shpell-grimoire-color "#c6b7ee"
-    set -g @shpell-grimoire-width "45%"
-    set -g @shpell-grimoire-height "55%"
+tmux \
+    bind-key "$grimoire_key" "run-shell '$PLUGIN_DIR/scripts/cast_shpell.sh standard'" \; \
+    bind-key "$ephemeral_grimoire_key" "run-shell '$PLUGIN_DIR/scripts/cast_shpell.sh ephemeral'" \; \
+    bind-key "$grimoire_kill_key" "run-shell '$PLUGIN_DIR/scripts/cast_shpell.sh kill'" \; \
+    bind-key "$grimoire_helper_key" "run-shell '$PLUGIN_DIR/scripts/cast_shpell.sh ephemeral grimoire \"$PLUGIN_DIR/bin/logo\"'" \; \
+    set -g @shpell-grimoire-color "#c6b7ee" \; \
+    set -g @shpell-grimoire-width "45%" \; \
+    set -g @shpell-grimoire-height "55%" \; \
     set -g @shpell-grimoire-position "top-center"
-TMUX
-} 2>/dev/null || true
