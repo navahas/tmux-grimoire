@@ -43,7 +43,7 @@ current_path=${env_line#PATH=}
 
 # Idempotent PATH update: only append if not already present
 if [[ ":$current_path:" != *":$PLUGIN_DIR/bin:"* ]]; then
-  tmux set-environment -g PATH "$PLUGIN_DIR/bin:$current_path" 2>/dev/null
+    tmux set-environment -g PATH "$PLUGIN_DIR/bin:$current_path" 2>/dev/null
 fi
 
 # Default keybindings (prefix + f/F/C/H) - overridden by user options
@@ -55,15 +55,15 @@ grimoire_helper_key="H"
 # Batch keybindings and options via heredoc to minimize tmux server calls
 # Wrapped in command group with || true to prevent TPM source failures (returns exit 0 even if tmux server unavailable)
 { tmux <<TMUX
-bind-key "$grimoire_key" run-shell "$PLUGIN_DIR/scripts/cast_shpell.sh standard"
-bind-key "$ephemeral_grimoire_key" run-shell "$PLUGIN_DIR/scripts/cast_shpell.sh
-ephemeral"
-bind-key "$grimoire_kill_key" run-shell "$PLUGIN_DIR/scripts/cast_shpell.sh kill"
-bind-key "$grimoire_helper_key" run-shell "$PLUGIN_DIR/scripts/cast_shpell.sh
-ephemeral grimoire '$PLUGIN_DIR/bin/logo'"
-set -g @shpell-grimoire-color "#c6b7ee"
-set -g @shpell-grimoire-width "45%"
-set -g @shpell-grimoire-height "55%"
-set -g @shpell-grimoire-position "top-center"
+    bind-key "$grimoire_key" run-shell "$PLUGIN_DIR/scripts/cast_shpell.sh standard"
+    bind-key "$ephemeral_grimoire_key" run-shell "$PLUGIN_DIR/scripts/cast_shpell.sh
+    ephemeral"
+    bind-key "$grimoire_kill_key" run-shell "$PLUGIN_DIR/scripts/cast_shpell.sh kill"
+    bind-key "$grimoire_helper_key" run-shell "$PLUGIN_DIR/scripts/cast_shpell.sh
+    ephemeral grimoire '$PLUGIN_DIR/bin/logo'"
+    set -g @shpell-grimoire-color "#c6b7ee"
+    set -g @shpell-grimoire-width "45%"
+    set -g @shpell-grimoire-height "55%"
+    set -g @shpell-grimoire-position "top-center"
 TMUX
 } 2>/dev/null || true
