@@ -53,7 +53,8 @@ fi
 grimoire_helper_key="H"
 
 # Batch keybindings and options via heredoc to minimize tmux server calls
-# Wrapped in command group with || true to prevent TPM source failures (returns exit 0 even if tmux server unavailable)
+# Wrapped in command group with || true to prevent TPM source failures
+# (returns exit 0 even if tmux server unavailable)
 { tmux <<TMUX
     bind-key "$grimoire_key" run-shell "$PLUGIN_DIR/scripts/cast_shpell.sh standard"
     bind-key "$ephemeral_grimoire_key" run-shell "$PLUGIN_DIR/scripts/cast_shpell.sh
