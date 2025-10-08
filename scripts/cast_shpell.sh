@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Parse arguments and sanitize custom shpell name for safe session/window naming
 mode=$1 # standard or ephemeral
 custom_shpell=$2
 custom_shpell="${custom_shpell// /-}" # Replace spaces with dashes
@@ -18,12 +19,19 @@ current_session=$(tmux display-message -p '#{client_session}')
 if [[ "$current_session" == "$SHPELL_SESSION" || "$current_session" == "$EPHEMERAL_SHPELL_SESSION" ]]; then
     if [[ "$mode" == "kill" ]]; then
         current_client=$(tmux display-message -p '#{client_name}')
-        originating_session=$(tmux display-message -p -t "$current_client" '#{client_session}')
-        session=$(tmux list-clients -F '#{client_session}' | grep -v '_shpell-session' | grep -v '_ephemeral-shpell-session' | head -n1)
         window_name=$(tmux display-message -p -t "$current_client" '#{window_name}')
 
+        # Find first non-shpell session using bash pattern matching (avoids grep subprocess overhead)
+        # Process substitution with early break - stops at first match instead of filtering all sessions
+        session=""
+        while IFS= read -r s; do
+            [[ $s != "$SHPELL_SESSION" && $s != "$EPHEMERAL_SHPELL_SESSION" ]] && { session=$s; break; }
+        done < <(tmux list-clients -F '#{client_session}')
+
         if [[ -n "$session" ]]; then
-            if tmux list-windows -t "$session" -F "#{window_name}" | grep -Fxq "$window_name"; then
+            # Direct tmux query for window existence (replaces list-windows | grep pipeline)
+            # Silent failure check - exits on error instead of parsing full window list
+            if tmux display-message -p -t "$session:$window_name" '#{window_id}' >/dev/null 2>&1; then
                 tmux kill-window -t "$session:$window_name"
             fi
         fi
@@ -43,10 +51,11 @@ if [[ "$custom_command" == shpell/* ]]; then
   custom_command="$grimoirepath/${custom_command#shpell/}"
 fi
 
-# Launch appropriate shpell type based on mode
+# Launch the appropriate shpell type based on mode
+# Spawn as a detached background process to keep tmux responsive
+# (no sourcing, no blocking)
 if [[ "standard" == "${mode}" ]]; then
-    # Launch in background to improve perceived responsiveness
-    (. ~/.tmux/plugins/tmux-grimoire/scripts/shpell.sh "$custom_shpell" "$custom_command" "$replay_flag" &)
+    "$HOME/.tmux/plugins/tmux-grimoire/scripts/shpell.sh" "$custom_shpell" "$custom_command" "$replay_flag" &
 elif [[ "ephemeral" == "${mode}" ]]; then
-    (. ~/.tmux/plugins/tmux-grimoire/scripts/ephemeral_shpell.sh "$custom_shpell" "$custom_command" &)
+    "$HOME/.tmux/plugins/tmux-grimoire/scripts/ephemeral_shpell.sh" "$custom_shpell" "$custom_command" &
 fi
