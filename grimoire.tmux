@@ -1,29 +1,79 @@
 #!/usr/bin/env bash
-grimoire_key=$(tmux show-option -gv '@grimoire-key')
-ephemeral_grimoire_key=$(tmux show-option -gv '@ephemeral-grimoire-key')
-grimoire_kill_key=$(tmux show-option -gv '@grimoire-kill-key')
 
+: <<'TMUX_GRIMOIRE'
+
+   ╔═══════════════════════════════════════════════════════════════╗
+   ║                                                               ║
+   ║  ████████╗███╗   ███╗██╗   ██╗██╗   ██╗                       ║
+   ║  ╚══██╔══╝████╗ ████║██║   ██║ ██╗ ██╔╝                       ║
+   ║     ██║   ██╔████╔██║██║   ██║  ████╔╝                        ║
+   ║     ██║   ██║╚██╔╝██║██║   ██║ ██╔═██╗                        ║
+   ║     ██║   ██║ ╚═╝ ██║╚██████╔╝██╔╝  ██╗                       ║
+   ║     ╚═╝   ╚═╝     ╚═╝ ╚═════╝ ╚═╝   ╚═╝                       ║
+   ║                                                               ║
+   ║   ██████╗ ██████╗ ██╗███╗   ███╗ ██████╗ ██╗██████╗ ███████╗  ║
+   ║  ██╔════╝ ██╔══██╗██║████╗ ████║██╔═══██╗██║██╔══██╗██╔════╝  ║
+   ║  ██║  ███╗██████╔╝██║██╔████╔██║██║   ██║██║██████╔╝█████╗    ║
+   ║  ██║   ██║██╔══██╗██║██║╚██╔╝██║██║   ██║██║██╔══██╗██╔══╝    ║
+   ║  ╚██████╔╝██║  ██║██║██║ ╚═╝ ██║╚██████╔╝██║██║  ██║███████╗  ║
+   ║   ╚═════╝ ╚═╝  ╚═╝╚═╝╚═╝     ╚═╝ ╚═════╝ ╚═╝╚═╝  ╚═╝╚══════╝  ║
+   ║                                                               ║ 
+   ╚═══════════════════════════════════════════════════════════════╝
+
+   Bash trick: Using : (no-op) with heredoc creates a comment block
+   that bash parses but doesn't execute - perfect for ASCII art
+
+TMUX_GRIMOIRE
+
+# Resolve plugin directory for script paths
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-current_path=$(tmux show-environment -g PATH | cut -d= -f2-)
 
-# Append only if not present, to prevent adding to PATH multiple times
+# SINGLE-IPC OPTION FETCH: batch all tmux option reads into one display-message call
+i=0
+while IFS= read -r line; do
+    opts[$i]="$line"
+    ((i++))
+done < <(tmux display-message -p '#{?@grimoire-key,#{@grimoire-key},}
+#{?@ephemeral-grimoire-key,#{@ephemeral-grimoire-key},}
+#{?@grimoire-kill-key,#{@grimoire-kill-key},}')
+
+# User-configurable keybindings
+# set -g @grimoire-key ''
+# set -g @ephemeral-grimoire-key ''
+# set -g @grimoire-kill-key ''
+grimoire_key=${opts[0]}
+ephemeral_grimoire_key=${opts[1]}
+grimoire_kill_key=${opts[2]}
+
+# Extend tmux PATH with plugin bin/ directory (parameter expansion avoids subprocess overhead)
+env_line=$(tmux show-environment -g PATH 2>/dev/null || true)
+current_path=${env_line#PATH=}
+: "${current_path:=$PATH}"
+
+# Idempotent PATH update: only append if not already present
 if [[ ":$current_path:" != *":$PLUGIN_DIR/bin:"* ]]; then
-  tmux set-environment -g PATH "$PLUGIN_DIR/bin:$current_path"
+    tmux set-environment -g PATH "$PLUGIN_DIR/bin:$current_path" 2>/dev/null
 fi
 
+# Default keybindings (prefix + f/F/C/H) - overridden by user options
 : "${grimoire_key:=f}"
 : "${ephemeral_grimoire_key:=F}"
 : "${grimoire_kill_key:=C}"
 grimoire_helper_key="H"
 
-tmux bind-key "$grimoire_key" run-shell "$HOME/.tmux/plugins/tmux-grimoire/scripts/cast_shpell.sh standard"
-tmux bind-key "$ephemeral_grimoire_key" run-shell "$HOME/.tmux/plugins/tmux-grimoire/scripts/cast_shpell.sh ephemeral"
-tmux bind-key "$grimoire_kill_key" run-shell "$HOME/.tmux/plugins/tmux-grimoire/scripts/cast_shpell.sh kill"
-
-tmux bind-key "$grimoire_helper_key" \
-  run-shell "$HOME/.tmux/plugins/tmux-grimoire/scripts/cast_shpell.sh ephemeral grimoire '$HOME/.tmux/plugins/tmux-grimoire/bin/logo'"
-
-tmux set -g @shpell-grimoire-color "#c6b7ee"
-tmux set -g @shpell-grimoire-width "45%"
-tmux set -g @shpell-grimoire-height "55%"
-tmux set -g @shpell-grimoire-position "top-center"
+# Batch keybindings and options via heredoc to minimize tmux server calls
+# Wrapped in command group with || true to prevent TPM source failures
+# (returns exit 0 even if tmux server unavailable)
+{ tmux <<TMUX
+    bind-key "$grimoire_key" run-shell "$PLUGIN_DIR/scripts/cast_shpell.sh standard"
+    bind-key "$ephemeral_grimoire_key" run-shell "$PLUGIN_DIR/scripts/cast_shpell.sh
+    ephemeral"
+    bind-key "$grimoire_kill_key" run-shell "$PLUGIN_DIR/scripts/cast_shpell.sh kill"
+    bind-key "$grimoire_helper_key" run-shell "$PLUGIN_DIR/scripts/cast_shpell.sh
+    ephemeral grimoire '$PLUGIN_DIR/bin/logo'"
+    set -g @shpell-grimoire-color "#c6b7ee"
+    set -g @shpell-grimoire-width "45%"
+    set -g @shpell-grimoire-height "55%"
+    set -g @shpell-grimoire-position "top-center"
+TMUX
+} 2>/dev/null || true
