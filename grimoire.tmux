@@ -25,16 +25,25 @@
 
 TMUX_GRIMOIRE
 
-# User-configurable keybindings 
-# set -g @grimoire-key '' 
-# set -g @ephemeral-grimoire-key ''
-# set -g @grimoire-kill-key ''
-grimoire_key=$(tmux show-option -gqv '@grimoire-key')
-ephemeral_grimoire_key=$(tmux show-option -gqv '@ephemeral-grimoire-key')
-grimoire_kill_key=$(tmux show-option -gqv '@grimoire-kill-key')
-
 # Resolve plugin directory for script paths
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# SINGLE-IPC OPTION FETCH: batch all tmux option reads into one display-message call
+i=0
+while IFS= read -r line; do
+    opts[$i]="$line"
+    ((i++))
+done < <(tmux display-message -p '#{?@grimoire-key,#{@grimoire-key},}
+#{?@ephemeral-grimoire-key,#{@ephemeral-grimoire-key},}
+#{?@grimoire-kill-key,#{@grimoire-kill-key},}')
+
+# User-configurable keybindings
+# set -g @grimoire-key ''
+# set -g @ephemeral-grimoire-key ''
+# set -g @grimoire-kill-key ''
+grimoire_key=${opts[0]}
+ephemeral_grimoire_key=${opts[1]}
+grimoire_kill_key=${opts[2]}
 
 # Extend tmux PATH with plugin bin/ directory (parameter expansion avoids subprocess overhead)
 env_line=$(tmux show-environment -g PATH 2>/dev/null || true)
