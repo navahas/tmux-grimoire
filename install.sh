@@ -235,6 +235,7 @@ ensure_with_tpm() {
             print ""
             print "# Global appearance"
             print "# set -g @grimoire-title '\'' grimoire '\''"
+            print "# set -g @grimoire-title '\'' 󱥭 '\'' # Nerd Font Icon (optional)"
             print "# set -g @grimoire-color '\''#c6b7ee'\''"
             print "# set -g @grimoire-width '\''80%'\''"
             print "# set -g @grimoire-height '\''30%'\''"
@@ -324,7 +325,7 @@ printf "\n\n"
 printf "%s%sNext Steps:%s\n\n" "$bold" "$purple" "$reset"
 
 if [ "$USE_TPM" -eq 1 ]; then
-    printf "%s1.%s Install the plugin with TPM:\n" "$purple" "$reset"
+    printf "%s1.%s Install the plugin with TPM (inside tmux):\n" "$purple" "$reset"
     printf "   %sPress %sprefix + I%s%s in tmux%s\n\n" "$dim" "$reset$yellow"  "$reset$dim"
     printf "%s2.%s Reload tmux configuration:\n" "$purple" "$reset"
     printf "   %stmux source-file \"%s\"%s\n\n" "$yellow" "$CONF" "$reset"
