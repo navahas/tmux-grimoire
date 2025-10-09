@@ -1,9 +1,5 @@
 # Configuration
 
-## Global Options
-
-Configure the default appearance and behavior for all shpells in your `~/.tmux.conf`:
-
 ### Keybindings
 
 ```tmux
@@ -30,16 +26,7 @@ set -g @grimoire-height '30%'         # Height as percentage or exact cells
 # Position
 set -g @grimoire-position 'bottom-center'  # See position options below
 ```
-
-### Custom Shpells Path
-
-```tmux
-# Directory for custom shpell scripts
-set -g @grimoire-path '$HOME/.config/grimoire'  # default location
-```
-
-Scripts placed in this directory can be referenced by relative path in custom shpell bindings.
-
+---
 ## Position Options
 
 Available positions for shpells:
@@ -53,11 +40,12 @@ Available positions for shpells:
 │ bottom-left │bottom-center │bottom-right │
 └─────────────┴──────────────┴─────────────┘
 ```
-
+---
 ## Per-Shpell Configuration
 
-Override global settings for individual shpells using the pattern `@shpell-<name>-<option>`:
-
+Override global settings for individual shpells using the pattern `@shpell-<name>-<option>`.
+- Use names without spaces (use hyphens or underscores)
+- 
 ```tmux
 # Example: Customize a shpell named "dev"
 bind-key -T prefix q run-shell "custom_shpell standard dev"
@@ -89,18 +77,12 @@ set -g @shpell-<name>-height    # Height (percentage or cells)
 
 Any option not specified for a shpell will fall back to the global `@grimoire-*` value.
 
-## Configuration Tips
+### Custom Shpells Path
 
-1. **Test Changes Live**: After editing `~/.tmux.conf`, reload with:
-   ```bash
-   tmux source-file ~/.tmux.conf
-   ```
+```tmux
+# Directory for custom shpell scripts
+set -g @grimoire-path '$HOME/.config/grimoire'  # default location
+```
 
-2. **Color Schemes**: Use hex colors matching your terminal theme for visual consistency
-
-3. **Size Guidelines**:
-   - For side panels: `width '50%'`, `height '100%'`
-   - For bottom panels: `width '100%'`, `height '30-50%'`
-   - For centered popups: `width '80%'`, `height '70%'`
-
-4. **Shpell Names**: Use descriptive names without spaces (use hyphens or underscores)
+Scripts placed in this directory can be referenced by relative path in custom shpell bindings.
+WIP: Add information/examples

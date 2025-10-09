@@ -1,20 +1,21 @@
 # Installation
 
-## Automated Installation (Recommended)
+## Automated Setup (Recommended)
 
-Run the interactive installer:
+Summon the installer with a single command:
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/navahas/tmux-grimoire/main/install.sh)
 ```
 
-The installer will:
+The script will:
 - Detect your tmux setup (TPM or manual)
 - Clone/update the grimoire repository
 - Add appropriate configuration to `~/.tmux.conf`
 - Include example custom shpells as comments
 - Provide clear next steps
 
+--- 
 ## Manual Installation
 
 ### With TPM (Tmux Plugin Manager)
@@ -54,6 +55,7 @@ run-shell ~/.tmux/plugins/tmux-grimoire/grimoire.tmux
 tmux source-file ~/.tmux.conf
 ```
 
+---
 ## Verifying Installation
 
 After installation, you should be able to use:

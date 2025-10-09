@@ -3,9 +3,14 @@
 
 # Tmux Grimoire
 
-Summonable popup shells (`shpells`) for tmux — customizable, scriptable, and driven by keybindings.
+Summonable popup shells (`shpells`) for tmux: customizable, scriptable and driven by keybindings.
 
-![Preview](https://raw.githubusercontent.com/navahas/tmux-grimoire/assets/images/grimoire.png)
+<p align="center">
+    <img src="https://raw.githubusercontent.com/navahas/tmux-grimoire/assets/images/grimoire.png"
+        alt="preview_tmux_grimoire" width="500"/>
+</p>
+
+--- 
 
 ## Installation
 
@@ -15,9 +20,9 @@ Run the interactive installer:
 bash <(curl -fsSL https://raw.githubusercontent.com/navahas/tmux-grimoire/main/install.sh)
 ```
 
-The installer will detect your setup, configure keybindings, and add example shpells to `~/.tmux.conf`.
+The script will detect your setup, configure keybindings, and add example shpells to `~/.tmux.conf`.
 
-**Prefer manual setup?** See [docs/INSTALLATION.md](docs/INSTALLATION.md)
+**Prefer manual setup?** See [docs/INSTALLATION.md](docs/INSTALLATION.md#manual-installation)
 
 ## Quick Reference
 
@@ -25,22 +30,20 @@ Default keybindings:
 
 | Keybind | Action |
 |---------|--------|
-| `prefix + f` | Toggle main shpell |
-| `prefix + F` | Open ephemeral shpell |
-| `prefix + H` | Show grimoire welcome screen |
-| `prefix + C` | Close current shpell |
+| `prefix + f` | Toggle the main shpell (open/close) |
+| `prefix + F` | Summon a new ephemeral shpell |
+| `prefix + C` | Close and dismiss the current shpell |
+| `prefix + H` | Reveal the Grimoire welcome banner |
 
 ## What's Next?
 
-After installation, your `~/.tmux.conf` will include example custom shpells (commented out). Uncomment and customize them to create your own magical shortcuts.
+After installation, your `~/.tmux.conf` will include example custom shpells, commented out and ready to awaken.
+Uncomment a few, tweak them and shape your workflow.
 
-**Documentation:**
-- **[Custom Shpells](docs/CUSTOM_SHPELLS.md)** — Create custom keybindings, understand `--replay` logic
-- **[Configuration](docs/CONFIGURATION.md)** — Customize appearance, position, and behavior
-- **[Advanced Usage](docs/ADVANCED.md)** — Window management, splits, and integrations
-
-**External Resources:**
-- **[grimoire](https://github.com/navahas/grimoire)** — Collection of ready-to-use shpell scripts
+**Further Reading:**
+- **[Custom Shpells](docs/CUSTOM_SHPELLS.md)** — Create custom keybindings and learn the `--replay` trick
+- **[Configuration](docs/CONFIGURATION.md)** — Adjust colors, size and position
+- **[Advanced Usage](docs/ADVANCED.md)** — Manage windows, splits and integrations
 
 ## Quick Example
 
@@ -62,6 +65,7 @@ bind-key -T prefix b run-shell "custom_shpell standard build 'cargo build' --rep
 
 Reload config: `tmux source-file ~/.tmux.conf`
 
+---
 ## License
 
 MIT
