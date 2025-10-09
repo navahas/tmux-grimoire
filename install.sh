@@ -129,13 +129,15 @@ sleep 0.8
 # --- Act 3: The Question ---------------------------------------------
 printf "\n%s%sReady to proceed?%s [Y/n] " "$bold" "$purple" "$reset"
 read -r answer
-case "$answer" in
+case "${answer}" in
     [Nn]*)
-        # printf "\n%sPerhaps another time... The grimoire awaits.%s\n\n" "$dim" "$reset"
         printf "\n%s" "$dim"
         type_text "Perhaps another time... The grimoire awaits." 0.01
         printf "%s\n\n" "$reset"
         exit 0
+        ;;
+    *)
+        # Default: proceed with installation
         ;;
 esac
 
