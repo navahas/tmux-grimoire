@@ -14,15 +14,16 @@ bind-key -T prefix <key> \
 | Parameter | Description |
 |-----------|-------------|
 | `standard` \| `ephemeral` | **Standard**: Persistent shell that stays open<br>**Ephemeral**: Closes automatically after command completes |
-| `<shpell-name>` | Custom identifier (avoid spaces). Used for per-shpell configuration. Examples: `dev`, `build`, `test-log` |
+| `<shpell-name>` | Custom identifier (avoid spaces). Used for per-shpell configuration.<br>Examples: `dev`, `build_gcc`, `test-log` |
 | `'<command>'` | Shell command or script path to execute. Omit for a blank interactive shell. |
-| `--replay` | (Optional) Enable smart replay for repeated executions |
+| `--replay` | [Optional] Enable smart replay for repeated executions |
 
 ## The `--replay` Flag
 
-**Default Behavior (Without `--replay`)**
+The `--replay` flag re-runs a command inside an existing shpell intelligently.
 
-Commands run only once when the shpell is first opened:
+### Default Behavior (no `--replay`)
+Commands run only on the first invocation:
 
 ```tmux
 bind-key -T prefix b run-shell "custom_shpell standard build 'cargo build'"
@@ -31,23 +32,21 @@ bind-key -T prefix b run-shell "custom_shpell standard build 'cargo build'"
 - First press of `prefix + b`: Runs `cargo build`
 - Subsequent presses: Opens the same shpell, but doesn't re-run the command
 
-**Smart Replay (With `--replay`)**
-
-When enabled, the command re-executes intelligently:
+### With `--replay`
+Command re-runs automatically **if the shell is idle**:
 
 ```tmux
-bind-key -T prefix b run-shell "custom_shpell standard build 'cargo build' --replay"
+bind-key -T prefix b run-shell "custom_shpell standard build 'cargo run' --replay"
 ```
-
 - First press: Runs `cargo build`
 - Subsequent presses:
-  - If shell is **idle** → re-runs the command
-  - If shell is **busy** → does nothing (prevents interrupting active processes)
+  - If shell is **idle** -> re-runs the command
+  - If shell is **busy** -> skips (avoids disrupting active processes)
 
-**When to use `--replay`**: Build commands, test runners, file watchers you want to restart, status checks.
+**Use `--replay` for:** build commands, test runners, file watchers, status commands
+**Avoid it for:** interactive shells, servers, or long-running sessions
 
-**Don't use `--replay` for**: Interactive shells, long-running servers, one-time setup commands.
-
+---
 ## Examples
 
 ### Basic
@@ -76,7 +75,7 @@ set -g @grimoire-path '$HOME/.config/grimoire'
 bind-key -T prefix R run-shell "custom_shpell ephemeral test 'scripts/test.sh'"
 
 # Run script with full path
-bind-key -T prefix W run-shell "custom_shpell standard workflow '$HOME/.config/foo/workflow.sh' --replay"
+bind-key -T prefix W run-shell "custom_shpell standard workflow '$HOME/.config/foo/bar.sh' --replay"
 ```
 
 ### Advanced
@@ -91,8 +90,8 @@ bind-key -T prefix D run-shell "custom_shpell ephemeral logs 'docker compose log
 # Quick search
 bind-key -T prefix S run-shell "custom_shpell ephemeral search 'rg --color=always -i'"
 ```
-
-## Per-Shpell Styling
+---
+## Custom Shpell Styling
 
 Override global appearance for specific shpells:
 
@@ -109,15 +108,46 @@ See [CONFIGURATION.md](CONFIGURATION.md) for all styling options.
 
 ## Troubleshooting
 
-**Command not running?**
-- Ensure the command is properly quoted: `"custom_shpell standard test 'npm test'"`
+<details>
+<summary><strong>Command not running?</strong></summary>
+Ensure the command is properly quoted:
 
-**Replay not working?**
-- Verify `--replay` is outside the command quotes: `'cargo build' --replay` (not `'cargo build --replay'`)
+```tmux
+custom_shpell standard test 'npm test'
+````
 
-**Shpell doesn't appear?**
-- Reload tmux: `tmux source-file ~/.tmux.conf` or restart your session
+</details>
+
+<details>
+<summary><strong>Replay not working?</strong></summary>
+
+Verify `--replay` is **outside** the command quotes:
+
+Correct:
+
+```tmux
+custom_shpell standard build 'cargo build' --replay
+```
+
+Incorrect:
+
+```tmux
+custom_shpell standard build 'cargo build --replay'
+```
+
+</details>
+
+<details>
+<summary><strong>Shpell doesn’t appear?</strong></summary>
+
+Reload tmux or restart your session:
+
+```bash
+tmux source-file ~/.tmux.conf
+```
+
+</details>
 
 ---
-
 **More examples**: Check the [grimoire repository](https://github.com/navahas/grimoire) for ready-to-use shpell scripts.
+(WIP)

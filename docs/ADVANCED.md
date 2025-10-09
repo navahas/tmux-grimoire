@@ -1,42 +1,38 @@
 # Advanced Usage
 
-## Window Management
-
-Move shpell windows within your tmux session:
-
-```tmux
-# Move current window left
-bind -r N swap-window -t -1 \; select-window -t -1
-
-# Move current window right
-bind -r M swap-window -t +1 \; select-window -t +1
-```
-
-The `-r` flag allows repeating the command without pressing prefix again.
-
 ## Working with Splits
 
 Shpells respect existing pane splits. The popup appears relative to the active pane.
 
 **Full-Width Bottom Panel**
-```tmux
+```
+┌─────────────────────────┐
+│                         │
+│    Main Editor/Code     │
+│                         │
+├─────────────────────────┤
+│      Shpell Popup       │
+│   (bottom-center 30%)   │
+└─────────────────────────┘
+
 set -g @grimoire-position 'bottom-center'
 set -g @grimoire-width '100%'
 set -g @grimoire-height '30%'
 ```
 
 **Full-Height Side Panel**
-```tmux
-set -g @grimoire-position 'right'
-set -g @grimoire-width '50%'
-set -g @grimoire-height '100%'
 ```
+┌─────────┬───────────────┐
+│         │               │
+│ Shpell  │     Code      │
+│  Popup  │               │
+│         │               │
+│         │               │
+└─────────┴───────────────┘
 
-**Centered Popup** (works with any split)
-```tmux
-set -g @grimoire-position 'center'
-set -g @grimoire-width '80%'
-set -g @grimoire-height '70%'
+set -g @grimoire-position 'left'
+set -g @grimoire-width '30%'
+set -g @grimoire-height '100%'
 ```
 
 ## Multiple Shpells Workflow
@@ -58,8 +54,6 @@ set -g @shpell-build-width '40%'
 bind-key -T prefix G run-shell "custom_shpell ephemeral gitlog \"git log --oneline --graph\""
 set -g @shpell-gitlog-position 'top-center'
 ```
-
-Each shpell toggles independently—compose your ideal workspace.
 
 ## Lifecycle
 

@@ -1,16 +1,14 @@
+<p align="center">
+    <img src="https://raw.githubusercontent.com/navahas/tmux-grimoire/assets/images/grimoire.png"
+        alt="preview_tmux_grimoire" width="500"/>
+</p>
+
 ![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![tmux 3.2+](https://img.shields.io/badge/tmux-3.2+-brightgreen)
 
 # Tmux Grimoire
 
 Summonable popup shells (`shpells`) for tmux: customizable, scriptable and driven by keybindings.
-
-<p align="center">
-    <img src="https://raw.githubusercontent.com/navahas/tmux-grimoire/assets/images/grimoire.png"
-        alt="preview_tmux_grimoire" width="500"/>
-</p>
-
---- 
 
 ## Installation
 
@@ -30,40 +28,19 @@ Default keybindings:
 
 | Keybind | Action |
 |---------|--------|
-| `prefix + f` | Toggle the main shpell (open/close) |
+| `prefix + f` | Open the main shpell, or close any active one |
 | `prefix + F` | Summon a new ephemeral shpell |
 | `prefix + C` | Close and dismiss the current shpell |
 | `prefix + H` | Reveal the Grimoire welcome banner |
 
-## What's Next?
+## Awaken the Grimoire
 
-After installation, your `~/.tmux.conf` will include example custom shpells, commented out and ready to awaken.
-Uncomment a few, tweak them and shape your workflow.
+After installation, your `~/.tmux.conf` will include example shpells (commented out). Uncomment and customize them to shape your workflow.
 
-**Further Reading:**
-- **[Custom Shpells](docs/CUSTOM_SHPELLS.md)** — Create custom keybindings and learn the `--replay` trick
-- **[Configuration](docs/CONFIGURATION.md)** — Adjust colors, size and position
-- **[Advanced Usage](docs/ADVANCED.md)** — Manage windows, splits and integrations
-
-## Quick Example
-
-```tmux
-# Add to ~/.tmux.conf
-
-# Custom dev shell
-bind-key -T prefix q run-shell "custom_shpell standard dev"
-
-# Git log viewer (ephemeral, custom styling)
-bind-key -T prefix G run-shell "custom_shpell ephemeral gitlog \"git log --oneline --graph --decorate --all\""
-set -g @shpell-gitlog-color '#e3716e'
-set -g @shpell-gitlog-position 'right'
-set -g @shpell-gitlog-width '50%'
-
-# Rust build with smart replay
-bind-key -T prefix b run-shell "custom_shpell standard build 'cargo build' --replay"
-```
-
-Reload config: `tmux source-file ~/.tmux.conf`
+**Documentation:**
+[Configuration](docs/CONFIGURATION.md)  | Adjust colors, size and position
+[Custom Shpells](docs/CUSTOM_SHPELLS.md) | Create custom keybindings and use the `--replay` mode
+[Advanced Usage](docs/ADVANCED.md) | Manage windows, splits and integrations
 
 ---
 ## License
