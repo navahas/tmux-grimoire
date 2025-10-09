@@ -15,7 +15,7 @@ Summonable popup shells (`shpells`) for tmux: customizable, scriptable and drive
 Run the interactive installer:
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/navahas/tmux-grimoire/main/install.sh)
+curl -fsSL https://raw.githubusercontent.com/navahas/tmux-grimoire/main/install.sh | bash
 ```
 
 The script will detect your setup, configure keybindings, and add example shpells to `~/.tmux.conf`.
