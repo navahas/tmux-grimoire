@@ -129,7 +129,7 @@ sleep 0.8
 
 # --- Act 3: The Question ---------------------------------------------
 printf "\n%s%sReady to proceed?%s [Y/n] " "$bold" "$purple" "$reset"
-read -r answer;
+read -r answer </dev/tty
 case "${answer}" in
     [Nn]*)
         printf "\n%s" "$dim"
