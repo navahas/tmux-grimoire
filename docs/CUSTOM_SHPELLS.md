@@ -18,11 +18,11 @@ bind-key -T prefix <key> \
 | `'<command>'` | Shell command or script path to execute. Omit for a blank interactive shell. |
 | `--replay` | [Optional] Enable smart replay for repeated executions |
 
-## The `--replay` Flag
+## `--replay`
 
 The `--replay` flag re-runs a command inside an existing shpell intelligently.
 
-### Default Behavior (no `--replay`)
+### Default Behavior: no `--replay`
 Commands run only on the first invocation:
 
 ```tmux
@@ -43,8 +43,8 @@ bind-key -T prefix b run-shell "custom_shpell standard build 'cargo run' --repla
   - If shell is **idle** -> re-runs the command
   - If shell is **busy** -> skips (avoids disrupting active processes)
 
-**Use `--replay` for:** build commands, test runners, file watchers, status commands
-**Avoid it for:** interactive shells, servers, or long-running sessions
+- **Use `--replay` for:** build commands, test runners, file watchers, status commands
+- **Avoid it for:** interactive shells, servers, or long-running sessions
 
 ---
 ## Examples

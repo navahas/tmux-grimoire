@@ -38,9 +38,9 @@ Default keybindings:
 After installation, your `~/.tmux.conf` will include example shpells (commented out). Uncomment and customize them to shape your workflow.
 
 **Documentation:**
-[Configuration](docs/CONFIGURATION.md)  | Adjust colors, size and position
-[Custom Shpells](docs/CUSTOM_SHPELLS.md) | Create custom keybindings and use the `--replay` mode
-[Advanced Usage](docs/ADVANCED.md) | Manage windows, splits and integrations
+- [Configuration](docs/CONFIGURATION.md)  | Adjust colors, size and position
+- [Custom Shpells](docs/CUSTOM_SHPELLS.md) | Create custom keybindings and use the `--replay` mode
+- [Advanced Usage](docs/ADVANCED.md) | Manage windows, splits and integrations
 
 ---
 ## License
