@@ -75,11 +75,7 @@ clear
 whoami=$(whoami)
 
 printf "%s%s" "$purple"
-type_text ".." 0.03
-printf "\n"
-sleep 0.5
-type_text "..." 0.04
-printf "\n"
+printf "\n\n"
 sleep 0.8
 type_text "....The Grimoire recognizes you, $yellow$whoami$purple...." 0.033
 printf "%s\n" "$reset"
@@ -165,10 +161,10 @@ else
     tmp="$(mktemp -d)"
     curl -fsSL https://codeload.github.com/navahas/tmux-grimoire/tar.gz/refs/heads/main \
         | tar -xz -C "$tmp"
-    rm -rf "$PREFIX"
-    mv "$tmp"/tmux-grimoire-* "$PREFIX"
-    rm -rf "$tmp"
-    sleep 1
+            rm -rf "$PREFIX"
+            mv "$tmp"/tmux-grimoire-* "$PREFIX"
+            rm -rf "$tmp"
+            sleep 1
 fi
 
 ok "Grimoire installed to $PREFIX"
@@ -178,6 +174,12 @@ sleep 0.5
 step "Configuring keybindings and settings"
 printf "\n"
 sleep 0.5
+
+# Notify about backup
+if [ -f "$CONF" ] && [ ! -f "${CONF}.bak" ]; then
+    printf "  %s->%s Preserving original configuration at %s%s.bak%s\n" "$cyan" "$reset" "$dim" "$CONF" "$reset"
+    sleep 0.4
+fi
 
 GRIMOIRE_TPM_LINE="set -g @plugin 'navahas/tmux-grimoire'"
 GRIMOIRE_MANUAL_LINE="run-shell ~/.tmux/plugins/tmux-grimoire/grimoire.tmux"
@@ -274,10 +276,10 @@ ensure_manual() {
         printf "# bind-key -T prefix q run-shell \"custom_shpell standard dev\"\n\n"
         printf "# Ephemeral shpell with custom styling (closes after use)\n"
         printf "# bind-key -T prefix G run-shell \"custom_shpell ephemeral gitlog \\\"git log --oneline --graph --decorate --all\\\"\"\n"
-        printf "# set -g @shpell-gitlog-color    '#e3716e'\n"
+        printf "# set -g @shpell-gitlog-color '#e3716e'\n"
         printf "# set -g @shpell-gitlog-position 'right'\n"
-        printf "# set -g @shpell-gitlog-width    '50%%'\n"
-        printf "# set -g @shpell-gitlog-height   '100%%'\n\n"
+        printf "# set -g @shpell-gitlog-width '50%%'\n"
+        printf "# set -g @shpell-gitlog-height '100%%'\n\n"
         printf "# More examples:\n"
         printf "# bind-key -T prefix E run-shell \"custom_shpell standard notes\"\n"
         printf "# bind-key -T prefix b run-shell \"custom_shpell standard rust-build 'cargo build' --replay\"\n\n"
@@ -335,7 +337,7 @@ fi
 sleep 2.4
 printf "%s%sTry These Commands:%s\n\n" "$bold" "$purple" "$reset"
 printf "   %sprefix + f%s%s....%s Open/Close your main shpell\n" "$green" "$reset" "$dim" "$reset"
-printf "   %s.............. Also used to close any open shpell%s\n" "$dim" "$reset"
+printf "   %s.............. Also used to close any shpell%s\n" "$dim" "$reset"
 printf "   %sprefix + F%s%s....%s Open an ephemeral shpell\n" "$green" "$reset" "$dim" "$reset"
 printf "   %sprefix + H%s%s....%s Display the grimoire welcome screen\n" "$green" "$reset" "$dim" "$reset"
 printf "   %sprefix + C%s%s....%s Close the current shpell\n\n" "$green" "$reset" "$dim" "$reset"
