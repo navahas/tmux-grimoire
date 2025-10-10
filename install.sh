@@ -89,8 +89,13 @@ sleep 1.1
 
 # --- Detect environment ----------------------------------------------
 has() { command -v "$1" >/dev/null 2>&1; }
-PREFIX="${PREFIX:-$HOME/.tmux/plugins/tmux-grimoire}"
-CONF="${TMUX_CONF:-$HOME/.tmux.conf}"
+
+# Detect existing config location (XDG or standard)
+if [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tmux.conf" ]; then
+    CONF="${TMUX_CONF:-${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tmux.conf}"
+else
+    CONF="${TMUX_CONF:-$HOME/.tmux.conf}"
+fi
 
 step "Checking dependencies..."
 sleep 0.5
@@ -107,9 +112,8 @@ backup_once() {
 }
 conf_has_line() { grep -Fqx "$1" "$CONF" 2>/dev/null; }
 
-# Detect TPM by dir or bootstrap line
+# Detect TPM by bootstrap line in config (not just directory existence)
 TPM_REGEX='^[[:space:]]*run(-shell)?[[:space:]]+['"'"'"]?~\/\.tmux\/plugins\/tpm\/tpm['"'"'"]?[[:space:]]*$'
-has_tpm_dir() { [ -d "$HOME/.tmux/plugins/tpm" ]; }
 conf_has_tpm_bootstrap() { grep -qiE "$TPM_REGEX" "$CONF" 2>/dev/null; }
 
 step "Detecting tmux setup...."
@@ -117,15 +121,28 @@ sleep 0.8
 printf " %s[+]%s\n" "$green" "$reset"
 
 USE_TPM=0
-if has_tpm_dir || conf_has_tpm_bootstrap; then
-    printf "  %s->%s Found TPM installation\n" "$cyan" "$reset"
+if conf_has_tpm_bootstrap; then
+    printf "  %s->%s Found TPM configuration\n" "$cyan" "$reset"
     printf "  %s->%s Will configure via TPM plugin manager\n" "$dim" "$reset"
     USE_TPM=1
 else
-    printf "  %s->%s TPM not detected\n" "$cyan" "$reset"
+    printf "  %s->%s TPM not detected in config\n" "$cyan" "$reset"
     printf "  %s->%s Will configure with manual method\n" "$dim" "$reset"
 fi
 sleep 0.8
+
+# Set PREFIX based on TPM detection
+if [ "$USE_TPM" -eq 1 ]; then
+    PREFIX="${PREFIX:-$HOME/.tmux/plugins/tmux-grimoire}"
+else
+    # No TPM: default to XDG-style path
+    PREFIX="${PREFIX:-${XDG_CONFIG_HOME:-$HOME/.config}/tmux/plugins/tmux-grimoire}"
+fi
+
+printf "  %s->%s Config file: %s\n" "$dim" "$reset" "$CONF"
+printf "  %s->%s Install path: %s\n" "$dim" "$reset" "$PREFIX"
+# Debug output
+# printf "  %s->%s USE_TPM: %s\n" "$dim" "$reset" "$USE_TPM"
 
 # --- Act 3: The Question ---------------------------------------------
 printf "\n%s%sReady to proceed?%s [Y/n] " "$bold" "$purple" "$reset"
@@ -185,7 +202,7 @@ if [ -f "$CONF" ] && [ ! -f "${CONF}.bak" ]; then
 fi
 
 GRIMOIRE_TPM_LINE="set -g @plugin 'navahas/tmux-grimoire'"
-GRIMOIRE_MANUAL_LINE="run-shell ~/.tmux/plugins/tmux-grimoire/grimoire.tmux"
+GRIMOIRE_MANUAL_LINE="run-shell $PREFIX/grimoire.tmux"
 
 ensure_with_tpm() {
     backup_once
