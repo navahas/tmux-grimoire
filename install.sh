@@ -139,6 +139,11 @@ else
     PREFIX="${PREFIX:-${XDG_CONFIG_HOME:-$HOME/.config}/tmux/plugins/tmux-grimoire}"
 fi
 
+printf "  %s->%s Config file: %s\n" "$dim" "$reset" "$CONF"
+printf "  %s->%s Install path: %s\n" "$dim" "$reset" "$PREFIX"
+# Debug output
+# printf "  %s->%s USE_TPM: %s\n" "$dim" "$reset" "$USE_TPM"
+
 # --- Act 3: The Question ---------------------------------------------
 printf "\n%s%sReady to proceed?%s [Y/n] " "$bold" "$purple" "$reset"
 read -r answer </dev/tty
