@@ -112,9 +112,8 @@ backup_once() {
 }
 conf_has_line() { grep -Fqx "$1" "$CONF" 2>/dev/null; }
 
-# Detect TPM by dir or bootstrap line
+# Detect TPM by bootstrap line in config (not just directory existence)
 TPM_REGEX='^[[:space:]]*run(-shell)?[[:space:]]+['"'"'"]?~\/\.tmux\/plugins\/tpm\/tpm['"'"'"]?[[:space:]]*$'
-has_tpm_dir() { [ -d "$HOME/.tmux/plugins/tpm" ]; }
 conf_has_tpm_bootstrap() { grep -qiE "$TPM_REGEX" "$CONF" 2>/dev/null; }
 
 step "Detecting tmux setup...."
@@ -122,36 +121,22 @@ sleep 0.8
 printf " %s[+]%s\n" "$green" "$reset"
 
 USE_TPM=0
-if has_tpm_dir || conf_has_tpm_bootstrap; then
-    printf "  %s->%s Found TPM installation\n" "$cyan" "$reset"
+if conf_has_tpm_bootstrap; then
+    printf "  %s->%s Found TPM configuration\n" "$cyan" "$reset"
     printf "  %s->%s Will configure via TPM plugin manager\n" "$dim" "$reset"
     USE_TPM=1
 else
-    printf "  %s->%s TPM not detected\n" "$cyan" "$reset"
+    printf "  %s->%s TPM not detected in config\n" "$cyan" "$reset"
     printf "  %s->%s Will configure with manual method\n" "$dim" "$reset"
 fi
 sleep 0.8
 
-# If no TPM, ask user for installation path preference
-INSTALL_PATH=""
-if [ "$USE_TPM" -eq 0 ]; then
-    printf "\n%s%sChoose installation path:%s\n" "$bold" "$purple" "$reset"
-    printf "  %s1.%s XDG-style: %s~/.config/tmux/plugins/%s (recommended)\n" "$cyan" "$reset" "$dim" "$reset"
-    printf "  %s2.%s Standard:  %s~/.tmux/plugins/%s\n" "$cyan" "$reset" "$dim" "$reset"
-    printf "%sEnter choice [1/2]:%s " "$purple" "$reset"
-    read -r path_choice </dev/tty
-    case "$path_choice" in
-        2) INSTALL_PATH="$HOME/.tmux/plugins" ;;
-        *) INSTALL_PATH="${XDG_CONFIG_HOME:-$HOME/.config}/tmux/plugins" ;;
-    esac
-    printf "\n"
-fi
-
-# Set PREFIX based on TPM detection or user choice
+# Set PREFIX based on TPM detection
 if [ "$USE_TPM" -eq 1 ]; then
     PREFIX="${PREFIX:-$HOME/.tmux/plugins/tmux-grimoire}"
 else
-    PREFIX="${PREFIX:-${INSTALL_PATH}/tmux-grimoire}"
+    # No TPM: default to XDG-style path
+    PREFIX="${PREFIX:-${XDG_CONFIG_HOME:-$HOME/.config}/tmux/plugins/tmux-grimoire}"
 fi
 
 # --- Act 3: The Question ---------------------------------------------
