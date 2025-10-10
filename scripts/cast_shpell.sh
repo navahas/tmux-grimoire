@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Resolve script directory dynamically to support any plugin installation path
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Parse arguments and sanitize custom shpell name for safe session/window naming
 mode=$1 # standard or ephemeral
 custom_shpell=$2
@@ -55,7 +58,7 @@ fi
 # Spawn as a detached background process to keep tmux responsive
 # (no sourcing, no blocking)
 if [[ "standard" == "${mode}" ]]; then
-    "$HOME/.tmux/plugins/tmux-grimoire/scripts/shpell.sh" "$custom_shpell" "$custom_command" "$replay_flag" &
+    "$SCRIPT_DIR/shpell.sh" "$custom_shpell" "$custom_command" "$replay_flag" &
 elif [[ "ephemeral" == "${mode}" ]]; then
-    "$HOME/.tmux/plugins/tmux-grimoire/scripts/ephemeral_shpell.sh" "$custom_shpell" "$custom_command" &
+    "$SCRIPT_DIR/ephemeral_shpell.sh" "$custom_shpell" "$custom_command" &
 fi
