@@ -89,8 +89,13 @@ sleep 1.1
 
 # --- Detect environment ----------------------------------------------
 has() { command -v "$1" >/dev/null 2>&1; }
-PREFIX="${PREFIX:-$HOME/.tmux/plugins/tmux-grimoire}"
-CONF="${TMUX_CONF:-$HOME/.tmux.conf}"
+
+# Detect existing config location (XDG or standard)
+if [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tmux.conf" ]; then
+    CONF="${TMUX_CONF:-${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tmux.conf}"
+else
+    CONF="${TMUX_CONF:-$HOME/.tmux.conf}"
+fi
 
 step "Checking dependencies..."
 sleep 0.5
@@ -126,6 +131,28 @@ else
     printf "  %s->%s Will configure with manual method\n" "$dim" "$reset"
 fi
 sleep 0.8
+
+# If no TPM, ask user for installation path preference
+INSTALL_PATH=""
+if [ "$USE_TPM" -eq 0 ]; then
+    printf "\n%s%sChoose installation path:%s\n" "$bold" "$purple" "$reset"
+    printf "  %s1.%s XDG-style: %s~/.config/tmux/plugins/%s (recommended)\n" "$cyan" "$reset" "$dim" "$reset"
+    printf "  %s2.%s Standard:  %s~/.tmux/plugins/%s\n" "$cyan" "$reset" "$dim" "$reset"
+    printf "%sEnter choice [1/2]:%s " "$purple" "$reset"
+    read -r path_choice </dev/tty
+    case "$path_choice" in
+        2) INSTALL_PATH="$HOME/.tmux/plugins" ;;
+        *) INSTALL_PATH="${XDG_CONFIG_HOME:-$HOME/.config}/tmux/plugins" ;;
+    esac
+    printf "\n"
+fi
+
+# Set PREFIX based on TPM detection or user choice
+if [ "$USE_TPM" -eq 1 ]; then
+    PREFIX="${PREFIX:-$HOME/.tmux/plugins/tmux-grimoire}"
+else
+    PREFIX="${PREFIX:-${INSTALL_PATH}/tmux-grimoire}"
+fi
 
 # --- Act 3: The Question ---------------------------------------------
 printf "\n%s%sReady to proceed?%s [Y/n] " "$bold" "$purple" "$reset"
@@ -185,7 +212,7 @@ if [ -f "$CONF" ] && [ ! -f "${CONF}.bak" ]; then
 fi
 
 GRIMOIRE_TPM_LINE="set -g @plugin 'navahas/tmux-grimoire'"
-GRIMOIRE_MANUAL_LINE="run-shell ~/.tmux/plugins/tmux-grimoire/grimoire.tmux"
+GRIMOIRE_MANUAL_LINE="run-shell $PREFIX/grimoire.tmux"
 
 ensure_with_tpm() {
     backup_once
