@@ -88,7 +88,7 @@ while IFS= read -r name; do
         window_exists=1
         break
     fi
-done < <(tmux list-windows -t "$current_session" -F '#{window_name}' 2>/dev/null | tr -d '\r')
+done < <(tmux list-windows -t "$current_session:" -F '#{window_name}' 2>/dev/null | tr -d '\r')
 
 # --- Single batched tmux client invocation ---
 # TMUX='' unsets the client env var so this command talks to the server
@@ -108,7 +108,7 @@ if [[ -z "$window_exists" ]]; then # window does not exist yet in $current_sessi
         tmux send-keys -t "$grimoire_session:$shpell_name" \
             "clear; bash -c \"${grimoire_custom_command//\"/\\\"}\"" Enter
     fi
-    tmux new-window -d -t "$current_session" -n "$shpell_name" -c "$session_dir"
+    tmux new-window -d -t "$current_session:" -n "$shpell_name" -c "$session_dir"
 
 else # window already exists in $current_session
     tmux swap-window -s "$current_session:$shpell_name" -t "$grimoire_session:$shpell_name"
@@ -132,7 +132,7 @@ fi
 
 # --- Single batched tmux client invocation ---
 tmux \
-    set-option -t "$current_session" mouse off \; \
+    set-option -t "$current_session:" mouse off \; \
     display-popup \
     -E \
     -d "$session_dir" \
@@ -144,4 +144,4 @@ tmux \
     -T "$popup_title" \
     "tmux select-window -t '$shpell_name' \; \
     attach-session -t '$grimoire_session' \; \
-    run-shell 'tmux set-option -t \"$current_session\" mouse \"$original_mouse_setting\"'"
+    run-shell 'tmux set-option -t \"$current_session:\" mouse \"$original_mouse_setting\"'"

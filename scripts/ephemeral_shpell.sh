@@ -101,7 +101,7 @@ fi
 
 # --- Single batched tmux client invocation ---
 tmux \
-    set-option -t "$current_session" mouse off \; \
+    set-option -t "$current_session:" mouse off \; \
     display-popup \
     -E \
     -d "$session_dir" \
@@ -113,4 +113,4 @@ tmux \
     -T "$popup_title" \
     "tmux attach-session -t '$grimoire_session' \; \
     select-window -t '$temp_window' \; \
-    run-shell 'tmux set-option -t \"$current_session\" mouse \"$original_mouse_setting\"'"
+    run-shell 'tmux set-option -t \"$current_session:\" mouse \"$original_mouse_setting\"'"
