@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/navahas/tmux-grimoire/assets/images/grimoire.png"
+    <img src="https://github.com/user-attachments/assets/8d6b431c-4ae7-4ce2-a516-361a2f670bab"
         alt="preview_tmux_grimoire" width="500"/>
 </p>
 
