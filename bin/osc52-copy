@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# Route OSC52 clipboard escape to the real terminal PTY
+# stdin: piped selection from copy-pipe-and-cancel
+PTY=$(tmux list-clients -F '#{client_tty} #{session_name}' \
+    | grep -Ev '_shpell-session|_ephemeral-shpell-session' \
+    | head -1 | cut -d' ' -f1)
+[ -z "$PTY" ] && exit 0
+printf '\033]52;c;%s\007' "$(base64 | tr -d '\n')" > "$PTY"
