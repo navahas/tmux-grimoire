@@ -15,10 +15,15 @@ The script will:
 - Include example custom shpells as comments
 - Provide clear next steps
 
---- 
+---
 ## Manual Installation
 
-### With TPM (Tmux Plugin Manager)
+<details>
+<summary>With Plugin Manager</summary>
+
+### TPM (Tmux Plugin Manager)
+
+The most known, although unmaintained https://github.com/tmux-plugins/tpm
 
 1. Add to your `~/.tmux.conf`:
 
@@ -35,7 +40,27 @@ set -g @plugin 'navahas/tmux-grimoire'
 tmux source-file ~/.tmux.conf
 ```
 
-### Without TPM
+### Plux (TPM in Rust)
+
+For rust lovers. https://github.com/nfejzic/plux
+
+1. Add to your `~/.config/tmux/plux.toml`:
+
+```toml
+[plugins]
+tmux-grimoire = "https://github.com/navahas/tmux-grimoire"
+```
+
+2. Reload tmux configuration and it will update all plugins:
+
+```bash
+tmux source-file ~/.tmux.conf
+```
+
+</details>
+
+<details>
+<summary>Without Plugin Manager</summary>
 
 1. Clone the repository:
 
@@ -54,6 +79,8 @@ run-shell ~/.tmux/plugins/tmux-grimoire/grimoire.tmux
 ```bash
 tmux source-file ~/.tmux.conf
 ```
+
+</details>
 
 ---
 ## Verifying Installation

@@ -35,7 +35,8 @@ while IFS= read -r line; do
     ((i++))
 done < <(tmux display-message -p '#{?@grimoire-key,#{@grimoire-key},}
 #{?@ephemeral-grimoire-key,#{@ephemeral-grimoire-key},}
-#{?@grimoire-kill-key,#{@grimoire-kill-key},}')
+#{?@grimoire-kill-key,#{@grimoire-kill-key},}
+#{?@grimoire-osc52,#{@grimoire-osc52},}')
 
 # User-configurable keybindings
 # set -g @grimoire-key ''
@@ -44,6 +45,7 @@ done < <(tmux display-message -p '#{?@grimoire-key,#{@grimoire-key},}
 grimoire_key=${opts[0]}
 ephemeral_grimoire_key=${opts[1]}
 grimoire_kill_key=${opts[2]}
+grimoire_osc52=${opts[3]}
 
 # Extend tmux PATH with plugin bin/ directory (parameter expansion avoids subprocess overhead)
 env_line=$(tmux show-environment -g PATH 2>/dev/null || true)
@@ -75,3 +77,12 @@ tmux \
     set -g @shpell-grimoire-width "45%" \; \
     set -g @shpell-grimoire-height "55%" \; \
     set -g @shpell-grimoire-position "top-center"
+
+# OSC52 clipboard: pipe copied text to the real terminal PTY (on by default)
+if [[ "$grimoire_osc52" != "off" ]]; then
+    osc52="$PLUGIN_DIR/bin/osc52-copy"
+    tmux \
+        bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "$osc52" \; \
+        bind-key -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "$osc52" \; \
+        bind-key -T copy-mode M-w send-keys -X copy-pipe-and-cancel "$osc52"
+fi

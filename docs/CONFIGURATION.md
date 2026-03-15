@@ -26,6 +26,16 @@ set -g @grimoire-height '30%'         # Height as percentage
 # Position
 set -g @grimoire-position 'bottom-center'  # See position options below
 ```
+
+### Clipboard
+
+OSC52 clipboard support is enabled by default. Copied text inside shpells is routed to your system clipboard through the terminal, even over SSH.
+
+```tmux
+# Disable if it causes issues with your terminal
+set -g @grimoire-osc52 'off'
+```
+
 ---
 ## Position Options
 
