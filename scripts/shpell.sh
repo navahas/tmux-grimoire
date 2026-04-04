@@ -110,7 +110,8 @@ if [[ -z "$window_exists" ]]; then # window does not exist yet in $current_sessi
             "clear; bash -c \"${grimoire_custom_command//\"/\\\"}\"" Enter
     fi
     tmux new-window -d -t "$current_session:" -n "$shpell_name" -c "$session_dir" \; \
-        set-option -w -t "$current_session:$shpell_name" automatic-rename off
+        set-option -w -t "$current_session:$shpell_name" automatic-rename off \; \
+        set-option -wq -t "$current_session:$shpell_name" @tmux_window_name_enabled 0
 
 else # window already exists in $current_session
     tmux swap-window -s "$current_session:$shpell_name" -t "$grimoire_session:$shpell_name"
