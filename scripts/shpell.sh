@@ -97,6 +97,7 @@ done < <(tmux list-windows -t "$current_session:" -F '#{window_name}' 2>/dev/nul
 # them sequentially and atomically: one process, one round-trip.
 TMUX='' tmux new-session -d -s "$grimoire_session" -n "$shpell_name" -c "$session_dir" \; \
     set-option -t "$grimoire_session" status off \; \
+    set-option -w -t "$grimoire_session:$shpell_name" automatic-rename off \; \
     set-hook -u -t "$grimoire_session" client-detached \; \
     set-hook -t "$grimoire_session" client-detached \
     "run-shell 'tmux swap-window -s \"$grimoire_session:$shpell_name\" \
@@ -108,7 +109,8 @@ if [[ -z "$window_exists" ]]; then # window does not exist yet in $current_sessi
         tmux send-keys -t "$grimoire_session:$shpell_name" \
             "clear; bash -c \"${grimoire_custom_command//\"/\\\"}\"" Enter
     fi
-    tmux new-window -d -t "$current_session:" -n "$shpell_name" -c "$session_dir"
+    tmux new-window -d -t "$current_session:" -n "$shpell_name" -c "$session_dir" \; \
+        set-option -w -t "$current_session:$shpell_name" automatic-rename off
 
 else # window already exists in $current_session
     tmux swap-window -s "$current_session:$shpell_name" -t "$grimoire_session:$shpell_name"
