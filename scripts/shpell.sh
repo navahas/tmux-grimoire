@@ -79,58 +79,58 @@ popup_title="$grimoire_name| $shpell_name "
 # Working dir: use pre-fetched pane_current_path -> default-path -> $PWD
 session_dir="${pane_current_path:-${default_path:-$PWD}}"
 
-# Probe if a window named $shpell_name exists in $current_session,
-# WITHOUT spawning grep/awk (pure Bash), and with exact string match.
-# We also strip any stray CRs just in case (some environments can inject them)
-window_exists=
-while IFS= read -r name; do
+# Probe by window name (preserves manual rename workflow),
+# but capture the immutable window ID (wid, e.g. @0, @5) for swap targeting.
+# Format per line: "window_name|@N" -> read into: name|wid
+placeholder_id=
+while IFS='|' read -r name wid; do
     if [[ $name == "$shpell_name" ]]; then
-        window_exists=1
+        placeholder_id="$wid"
         break
     fi
-done < <(tmux list-windows -t "$current_session:" -F '#{window_name}' 2>/dev/null | tr -d '\r')
+done < <(tmux list-windows -t "$current_session:" -F '#{window_name}|#{window_id}' 2>/dev/null)
 
-# --- Single batched tmux client invocation ---
-# TMUX='' unsets the client env var so this command talks to the server
-# (critical when running from inside tmux to avoid nesting client state).
-# We chain multiple subcommands with '\;' so the *same tmux client* performs
-# them sequentially and atomically: one process, one round-trip.
-TMUX='' tmux new-session -d -s "$grimoire_session" -n "$shpell_name" -c "$session_dir" \; \
-    set-option -t "$grimoire_session" status off \; \
-    set-hook -u -t "$grimoire_session" client-detached \; \
-    set-hook -t "$grimoire_session" client-detached \
-    "run-shell 'tmux swap-window -s \"$grimoire_session:$shpell_name\" \
-        -t \"$current_session:$shpell_name\"; \
-        tmux kill-session -t \"$grimoire_session\"'"
+# --- Create grimoire session, capture window ID ---
+grimoire_wid=$(TMUX='' tmux new-session -d -s "$grimoire_session" -n "$shpell_name" \
+    -c "$session_dir" -P -F '#{window_id}' \; \
+    set-option -t "$grimoire_session" status off)
 
-if [[ -z "$window_exists" ]]; then # window does not exist yet in $current_session
+if [[ -z "$placeholder_id" ]]; then # window does not exist yet in $current_session
     if [[ -n $grimoire_custom_command ]]; then
-        tmux send-keys -t "$grimoire_session:$shpell_name" \
+        tmux send-keys -t "$grimoire_wid" \
             "clear; bash -c \"${grimoire_custom_command//\"/\\\"}\"" Enter
     fi
-    tmux new-window -d -t "$current_session:" -n "$shpell_name" -c "$session_dir"
+    placeholder_id=$(tmux new-window -d -t "$current_session:" -n "$shpell_name" \
+        -c "$session_dir" -P -F '#{window_id}')
+    popup_wid="$grimoire_wid"
 
 else # window already exists in $current_session
-    tmux swap-window -s "$current_session:$shpell_name" -t "$grimoire_session:$shpell_name"
+    tmux swap-window -s "$placeholder_id" -t "$grimoire_wid"
+    popup_wid="$placeholder_id"
 
     # Skip all replay/idle probing unless we actually need to replay a command
     if [[ $replay_flag == "--replay" && -n $grimoire_custom_command ]]; then
-        # Cheaper "idle-ish" check: current pane command is a shell?
-        # - one tmux call instead of pgrep+wc. No extra processes.
-        pane_cmd=$(tmux list-panes -t "$grimoire_session:$shpell_name" -F "#{pane_current_command}" | head -n1)
+        pane_cmd=$(tmux list-panes -t "$popup_wid" -F "#{pane_current_command}" | head -n1)
         case "$pane_cmd" in
             bash|zsh|fish) is_idle=1 ;;
             *) is_idle=0 ;;
         esac
 
         if [[ $is_idle -eq 1 ]]; then
-            tmux send-keys -t "$grimoire_session:$shpell_name" \
+            tmux send-keys -t "$popup_wid" \
                 "clear; bash -c \"${grimoire_custom_command//\"/\\\"}\"" Enter
         fi
     fi
 fi
 
-# --- Single batched tmux client invocation ---
+# Hook: swap by immutable window ID, restore name, kill session.
+tmux set-hook -u -t "$grimoire_session" client-detached \; \
+    set-hook -t "$grimoire_session" client-detached \
+    "run-shell 'tmux swap-window -s \"$grimoire_wid\" -t \"$placeholder_id\"; \
+        tmux rename-window -t \"$grimoire_wid\" \"$shpell_name\"; \
+        tmux kill-session -t \"$grimoire_session\"'"
+
+# --- Open popup ---
 tmux \
     set-option -t "$current_session:" mouse off \; \
     display-popup \
@@ -142,6 +142,6 @@ tmux \
     -b "rounded" \
     -S "fg=$grimoire_window_color" \
     -T "$popup_title" \
-    "tmux select-window -t '$shpell_name' \; \
+    "tmux select-window -t '$popup_wid' \; \
     attach-session -t '$grimoire_session' \; \
     run-shell 'tmux set-option -t \"$current_session:\" mouse \"$original_mouse_setting\"'"
