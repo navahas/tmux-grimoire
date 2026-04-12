@@ -63,7 +63,7 @@ fi
 : "${grimoire_key:=f}"
 : "${ephemeral_grimoire_key:=F}"
 : "${grimoire_kill_key:=C}"
-grimoire_helper_key="H"
+: "${grimoire_logo_key:=H}"
 
 # Batch PATH + keybindings + options to minimize
 tmux \
@@ -71,7 +71,7 @@ tmux \
     bind-key "$grimoire_key" "run-shell '$PLUGIN_DIR/scripts/cast_shpell.sh standard'" \; \
     bind-key "$ephemeral_grimoire_key" "run-shell '$PLUGIN_DIR/scripts/cast_shpell.sh ephemeral'" \; \
     bind-key "$grimoire_kill_key" "run-shell '$PLUGIN_DIR/scripts/cast_shpell.sh kill'" \; \
-    bind-key "$grimoire_helper_key" "run-shell '$PLUGIN_DIR/scripts/cast_shpell.sh ephemeral grimoire \"$PLUGIN_DIR/bin/logo\"'" \; \
+    bind-key "$grimoire_logo_key" "run-shell '$PLUGIN_DIR/scripts/cast_shpell.sh ephemeral grimoire \"$PLUGIN_DIR/bin/logo\"'" \; \
     set -g @grimoire-custom-shpell "$PLUGIN_DIR/bin/custom_shpell" \; \
     set -g @shpell-grimoire-color "#c6b7ee" \; \
     set -g @shpell-grimoire-width "45%" \; \
